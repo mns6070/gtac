@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Lvq8Jmo3eHQw8Gmx/uyoJ0Y2n1nI1HV96Q/oRcQlW2U='; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-GmOxeKenJZsk6KYIshFdwUODvlApzbWv0IMKl88ygU8='; style-src 'sha256-zO6BJ4d/lW/W+XUK8VmXDUoK1/u/xLFlWvpL6mCQS0Y='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -173,6 +173,11 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
 .foldbody{padding-top:10px}
 .lvl{color:var(--muted);font-weight:400}
 [hidden]{display:none!important}
+.results.empty>*:not(.result-head):not(#status):not(#pick){display:none}
+.results.empty .head-actions{display:none}
+.mt8{margin-top:8px}
+.btns-left{justify-content:flex-start;margin-top:8px}
+.head-actions{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
 </style>
 
 </head>
@@ -196,7 +201,7 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
     <form class="steps" id="f" autocomplete="off">
       <fieldset>
         <legend><span class="n">1</span>School system</legend>
-        <select id="district" aria-label="School system"></select>
+        <select id="district" aria-label="School system"><option value="">Choose your school system</option></select>
         <p class="note">All 24 Maryland school systems. Each one covers a county (or Baltimore City), so if you know your county you know your school system. How much each one publishes about GT services varies, and the results say so.</p>
       </fieldset>
 
@@ -204,11 +209,11 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
         <summary><span class="n">+</span><span class="st">Optional: ZIP code, comparison, and your school</span><span class="count"></span></summary>
         <div class="foldbody">
           <label class="note" for="zip">Or find it by ZIP code (optional)</label>
-          <input id="zip" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="21047" aria-describedby="zip-note">
+          <input id="zip" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="12345" aria-describedby="zip-note">
           <p class="note" id="zip-note" aria-live="polite"></p>
-          <label class="note" for="compare" style="margin-top:8px">Compare with another school system (optional)</label>
+          <label class="note" for="compare" class="mt8">Compare with another school system (optional)</label>
           <select id="compare" aria-label="Compare with another school system"></select>
-          <label class="note" for="school" style="margin-top:8px">Your school (optional)</label>
+          <label class="note" for="school" class="mt8">Your school (optional)</label>
           <input id="school" maxlength="120" list="school-list" autocomplete="off" placeholder="School name">
           <datalist id="school-list"></datalist>
           <p class="note" id="loc-note" aria-live="polite"></p>
@@ -225,7 +230,7 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
         <legend><span class="n">3</span>Has this school system identified your child as GT?</legend>
         <div class="chips" role="radiogroup" aria-label="Identification status">
           <label class="chip"><input type="radio" name="status" id="s-yes" value="yes"><span>Yes</span></label>
-          <label class="chip"><input type="radio" name="status" id="s-no" value="no" checked><span>No</span></label>
+          <label class="chip"><input type="radio" name="status" id="s-no" value="no"><span>No</span></label>
           <label class="chip"><input type="radio" name="status" id="s-unsure" value="unsure"><span>Not sure</span></label>
           <label class="chip"><input type="radio" name="status" id="s-other" value="other"><span>Yes, in another district or state</span></label>
         </div>
@@ -272,18 +277,19 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
       </details>
     </form>
 
-    <div class="results">
+    <div class="results" id="results">
       <p class="sr-only" id="status" role="status" aria-live="polite"></p>
       <div class="result-head">
         <div>
           <p class="eyebrow" id="r-eyebrow"></p>
           <h2 id="r-title"></h2>
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="head-actions">
           <div class="btns"><button type="button" class="copy" id="copy">Copy summary for a meeting</button><button type="button" class="copy alt" id="plan">Download my plan</button><button type="button" class="copy alt" id="ics">Add key dates to my calendar</button><button type="button" class="copy alt" id="print">Print</button></div>
           <span class="toast" id="toast"></span>
         </div>
       </div>
+      <p class="notice" id="pick" hidden></p>
       <div id="manual" hidden><label for="manual-text" class="note">Your browser blocked copying or downloading. Select all of this text and copy it:</label><textarea id="manual-text" readonly rows="8"></textarea></div>
 
       <section class="block">
@@ -329,11 +335,11 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
         <p class="note">A starting point you can edit. The optional boxes below fill in your names and contact details, and you can fill in the rest of the [brackets] yourself. Letters are in English. Nothing you type here is saved or sent.</p>
         <label class="note" for="l-parent">Your name (optional)</label>
         <input id="l-parent" maxlength="80" autocomplete="off" data-nt>
-        <label class="note" for="l-child" style="margin-top:8px">Your child's name (optional)</label>
+        <label class="note" for="l-child" class="mt8">Your child's name (optional)</label>
         <input id="l-child" maxlength="80" autocomplete="off" data-nt>
-        <label class="note" for="l-contact" style="margin-top:8px">Your phone or email (optional)</label>
+        <label class="note" for="l-contact" class="mt8">Your phone or email (optional)</label>
         <input id="l-contact" maxlength="80" autocomplete="off" data-nt>
-        <label class="note" for="letter-type" style="margin-top:8px">Type of letter</label>
+        <label class="note" for="letter-type" class="mt8">Type of letter</label>
         <select id="letter-type" aria-label="Type of letter">
           <option value="referral">Ask for GT screening or referral</option>
           <option value="appeal">Appeal a decision</option>
@@ -341,7 +347,7 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
           <option value="acceleration">Ask for an acceleration review</option>
         </select>
         <textarea id="letter-text" maxlength="6000" rows="16" aria-label="Letter text"></textarea>
-        <div class="btns" style="justify-content:flex-start;margin-top:8px"><button type="button" class="copy" id="letter-copy">Copy letter</button><button type="button" class="copy alt" id="letter-download">Download letter</button></div>
+        <div class="btns btns-left"><button type="button" class="copy" id="letter-copy">Copy letter</button><button type="button" class="copy alt" id="letter-download">Download letter</button></div>
       </details>
 
       <details class="block" id="resources-block">
@@ -711,10 +717,12 @@ function syncCompare(){
   cmp.value=keep;
 }
 function buildGradeOptions(){
-  const sel=$("grade"),cur=sel.value||"4",lim=gradeLimit(),list=lim||GRADE_LIST;
+  const sel=$("grade"),cur=sel.value||"",lim=gradeLimit(),list=lim||GRADE_LIST;
   sel.innerHTML="";sel.setAttribute("aria-label",LANG==="es"?"Grado":"Grade");
+  {const o0=document.createElement("option");o0.value="";o0.textContent=tr("Choose a grade");sel.append(o0);}
   list.forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=gradeLabel(v);sel.append(o);});
-  if(list.includes(cur)) sel.value=cur;
+  if(cur==="") sel.value="";
+  else if(list.includes(cur)) sel.value=cur;
   else{const n=gradeNum(cur);sel.value=list.reduce((b,v)=>Math.abs(gradeNum(v)-n)<Math.abs(gradeNum(b)-n)?v:b,list[0]);}
   const note=$("grade-note");
   if(note) note.textContent=lim?tr("Showing only the grades this school serves. Clear the school box to see every grade."):"";
@@ -727,7 +735,7 @@ function syncGradeLimit(){
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
 const TOOL_VERSION="2026.09.29.1";
-const BUILD_ID="d4dd07a454";
+const BUILD_ID="de26696e3d";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
@@ -876,7 +884,7 @@ const ES={
 "{n} of 24 school systems shown.":"Se muestran {n} de 24 distritos.",
 "Sort by {c}":"Ordenar por {c}","School system name":"Distrito escolar",
 /* toasts */
-"Copied":"Copiado","Copied. This includes names you typed. Other apps on this device may read the clipboard. Use Download or Print instead on a shared device.":"Copiado. Incluye nombres que escribió. Otras aplicaciones de este dispositivo pueden leer el portapapeles. En un dispositivo compartido, use Descargar o Imprimir.","Some school system details could not be loaded correctly and were left out. Please check with your school system.":"Algunos datos de los distritos escolares no se pudieron cargar bien y se omitieron. Confirme con su distrito escolar.","Your browser blocked copying. The text is below.":"Su navegador bloqueó la copia. El texto está abajo.","Downloaded":"Descargado","No upcoming dates for this school system. Ask the school for its deadlines.":"No hay fechas próximas para este distrito. Pregunte a la escuela por sus fechas límite.",
+"Copied":"Copiado","Choose your school system":"Elija su distrito escolar", "Start by answering the first three questions":"Comience respondiendo las primeras tres preguntas","Choose a grade":"Elija un grado","Choose your school system, your child's grade, and whether your child has been identified as GT on the left. Then you will see what Maryland requires, what that school system offers at that grade, who to contact, and questions to ask.":"Elija a la izquierda su distrito escolar, el grado de su hijo y si su hijo ha sido identificado como dotado y talentoso (GT). Luego verá lo que exige Maryland, lo que ofrece ese distrito en ese grado, con quién comunicarse y qué preguntas hacer.","Copied. This includes names you typed. Other apps on this device may read the clipboard. Use Download or Print instead on a shared device.":"Copiado. Incluye nombres que escribió. Otras aplicaciones de este dispositivo pueden leer el portapapeles. En un dispositivo compartido, use Descargar o Imprimir.","Some school system details could not be loaded correctly and were left out. Please check with your school system.":"Algunos datos de los distritos escolares no se pudieron cargar bien y se omitieron. Confirme con su distrito escolar.","Your browser blocked copying. The text is below.":"Su navegador bloqueó la copia. El texto está abajo.","Downloaded":"Descargado","No upcoming dates for this school system. Ask the school for its deadlines.":"No hay fechas próximas para este distrito. Pregunte a la escuela por sus fechas límite.",
 "Correction message copied. Paste it into an email to the GTAC Student/Family Subcommittee.":"Mensaje de corrección copiado. Péguelo en un correo al Subcomité de Estudiantes y Familias del GTAC.",
 "Results updated for {d}, {g}.":"Resultados actualizados para {d}, {g}.",
 "Something went wrong showing these results":"Algo salió mal al mostrar estos resultados","Please reload the page. If this keeps happening, tell the GTAC Student/Family Subcommittee.":"Vuelva a cargar la página. Si sigue ocurriendo, avise al Subcomité de Estudiantes y Familias del GTAC.",
@@ -1301,7 +1309,16 @@ function renderExtra(d,st,now){
   }
 }
 function render(){
-  const st=state(); const {d,qs,steps}=build(st);
+  const st=state();
+  const R=$("results"),empty=!own(D,st.d)||$("grade").value===""||!document.querySelector('input[name="status"]:checked');
+  R.classList.toggle("empty",empty);$("pick").hidden=!empty;
+  if(empty){
+    $("r-eyebrow").textContent="";
+    $("r-title").textContent=tr("Start by answering the first three questions");
+    $("pick").textContent=tr("Choose your school system, your child's grade, and whether your child has been identified as GT on the left. Then you will see what Maryland requires, what that school system offers at that grade, who to contact, and questions to ask.");
+    return;
+  }
+  const {d,qs,steps}=build(st);
   const now=new Date();
   const gl=gradeLabel(st.gr);
   $("r-eyebrow").textContent=d.name+" · "+gl;
@@ -1587,7 +1604,7 @@ async function downloadDocx(name,text,titled){
     toast(tr("Your browser blocked copying. The text is below."),true);showManual(text);return false;
   }
 }
-function icsEscape(s){return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");}
+function icsEscape(s){return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\r\n?|\n/g,"\\n");}
 function ymd(dt){return dt.getFullYear()+String(dt.getMonth()+1).padStart(2,"0")+String(dt.getDate()).padStart(2,"0");}
 function calendarEvents(st){
   const d=D[st.d],now=new Date(),ev=[];
@@ -1704,7 +1721,7 @@ function syncControls(){
 }
 function writeHash(st){
   if(!touched) return;
-  try{const h=new URLSearchParams();h.set("d",st.d);if(LANG!=="en")h.set("l",LANG);history.replaceState(null,"","#"+h.toString());}catch(e){}
+  try{const h=new URLSearchParams();if(st.d)h.set("d",st.d);if(LANG!=="en")h.set("l",LANG);history.replaceState(null,"","#"+h.toString());}catch(e){}
 }
 function readHash(){
   try{
@@ -1750,7 +1767,7 @@ function zipLookup(){
     const o=document.createElement("option");o.value=k;o.textContent=D[k].name;sel.append(o);
     const c=document.createElement("option");c.value=k;c.textContent=D[k].name;cmp.append(c);CMP_OPTS[k]=c;
   });
-  sel.value=D.harford?"harford":keys[0];
+  sel.value="";
   buildGradeOptions();
   collectStatic();
   readHash();
