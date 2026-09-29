@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-C1LjHV4pUmjpz3l8eupCOI9GBD67yGSjGhfwwdwycwM='; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Lvq8Jmo3eHQw8Gmx/uyoJ0Y2n1nI1HV96Q/oRcQlW2U='; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -34,12 +34,11 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15p
 .wrap{max-width:1120px;margin:0 auto;padding-block:28px 56px}
 .proto{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13px;color:var(--flag);background:var(--flag-soft);border-radius:8px;padding:10px 14px;margin-bottom:28px}
 .proto strong{font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:12px}
-header h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,4.2vw,40px);line-height:1.12;margin:0 0 10px;text-wrap:balance}
-header{max-width:46rem}
+header h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,4.2vw,40px);line-height:1.12;margin:0 0 10px;}
 header p{margin:0;color:var(--muted);font-size:16px}
 .grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:28px;margin-top:28px;align-items:start}
 @media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
-form.steps{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:22px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);max-height:calc(100vh - 32px);overflow-y:auto}
+form.steps{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:22px;}
 @media (max-width:860px){form.steps{position:static;max-height:none;overflow:visible}}
 fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 legend{font-weight:600;font-size:14px;margin-bottom:8px;padding:0;display:flex;gap:8px;align-items:baseline}
@@ -93,7 +92,7 @@ ol.qs li::marker{font-family:var(--mono);color:var(--accent);font-size:13px}
 .contact a[href^="tel:"]{white-space:nowrap}
 .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 @media (max-width:640px){.two{grid-template-columns:minmax(0,1fr)}}
-footer{margin-top:36px;font-size:12.5px;color:var(--muted);max-width:80ch;display:flex;flex-direction:column;gap:6px}
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
 footer a{color:var(--accent)}
 .toast{font-size:13px;color:var(--accent);min-height:1em}
 .o-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline;justify-content:space-between;margin-bottom:12px}
@@ -102,6 +101,8 @@ footer a{color:var(--accent)}
 .level.detailed{background:var(--accent-soft);color:var(--accent)}
 .level.partial,.level.limited{background:var(--flag-soft);color:var(--flag)}
 #level-note{margin:-4px 0 12px}
+#all-block{margin-top:28px}
+#steps-block summary{font-family:var(--serif);font-size:19px;font-weight:600}
 .src{margin-top:12px}
 .src a{color:var(--accent)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -285,12 +286,6 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
       </div>
       <div id="manual" hidden><label for="manual-text" class="note">Your browser blocked copying or downloading. Select all of this text and copy it:</label><textarea id="manual-text" readonly rows="8"></textarea></div>
 
-      <section class="block law">
-        <h3>What Maryland requires of every school system</h3>
-        <ul id="law-list" data-rich="law"></ul>
-        <p class="cite">COMAR 13A.04.07 · Maryland Model of Gifted and Talented Education</p>
-      </section>
-
       <section class="block">
         <div class="o-head">
           <h3 id="o-title">What this school system offers</h3>
@@ -308,20 +303,25 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
         <div class="cmp" id="cmp"></div>
       </section>
 
-      <div class="two">
-        <section class="block">
-          <h3>Questions to ask</h3>
-          <ol class="qs" id="qs"></ol>
-        </section>
-        <details class="block" id="steps-block">
-          <summary>Next steps</summary>
-          <ol class="qs" id="steps"></ol>
-        </details>
-      </div>
-
       <section class="block">
         <h3>Who to contact</h3>
         <div class="contact" id="contact"></div>
+      </section>
+
+      <section class="block">
+        <h3>Questions to ask</h3>
+        <ol class="qs" id="qs"></ol>
+      </section>
+
+      <details class="block" id="steps-block" open>
+        <summary>Next steps</summary>
+        <ol class="qs" id="steps"></ol>
+      </details>
+
+      <section class="block law">
+        <h3>What Maryland requires of every school system</h3>
+        <ul id="law-list" data-rich="law"></ul>
+        <p class="cite">COMAR 13A.04.07 · Maryland Model of Gifted and Talented Education</p>
       </section>
 
       <details class="block" id="letter-block">
@@ -366,7 +366,6 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
     <span id="footer-note" data-rich="footer1"></span>
     <span id="footer-sources" data-rich="footer2"></span>
     <span class="feedback"><button type="button" class="copy alt" id="report">Report a correction or share feedback</button></span>
-    <details id="changes"><summary>What changed in this version</summary><ul id="changes-list"></ul></details>
     <span id="build"></span>
   </footer>
 </main>
@@ -728,16 +727,11 @@ function syncGradeLimit(){
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
 const TOOL_VERSION="2026.09.29.1";
-const BUILD_ID="e5336e3de6";
+const BUILD_ID="d4dd07a454";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
 const CORRECTIONS_EMAIL="";
-const CHANGELOG=[
-  ["2026.09.28.3","Added ZIP lookup, a school picker, strengths, appeals cards with a day counter, full time details, twice exceptional matching, letter templates, a plan download, calendar dates, an all 24 table, student wording, Spanish, and a correction button."],
-  ["2026.09.28.2","Fixed 27 edge cases: labeled general questions, dated deadlines, appeals gaps, safer copy, a print layout, no outside fonts, and address based sharing."],
-  ["2026.09.27.1","First version sent to MSDE, covering all 24 school systems."]
-];
 const ZIPS={"allegany":["21502","21521","21530","21532","21539","21540","21545","21555","21557","21562","21766"],"annearundel":["20701","20711","20724","20733","20751","20755","20758","20764","20776","20778","20779","21012","21032","21035","21037","21054","21060","21061","21076","21077","21090","21108","21113","21114","21122","21140","21144","21146","21226","21240","21401","21402","21403","21405","21409","21412"],"baltcity":["21201","21202","21205","21206","21210","21211","21212","21213","21214","21215","21216","21217","21218","21223","21224","21225","21229","21230","21231","21233","21239","21287"],"baltcounty":["21013","21030","21031","21051","21053","21057","21082","21087","21093","21111","21117","21120","21128","21131","21133","21136","21152","21155","21156","21162","21204","21207","21208","21209","21219","21220","21221","21222","21227","21228","21234","21236","21237","21244","21286"],"calvert":["20615","20639","20657","20676","20678","20685","20688","20689","20714","20732","20736","20754"],"caroline":["21629","21632","21636","21639","21640","21649","21655","21660"],"carroll":["21048","21074","21102","21157","21158","21776","21784","21787","21791"],"cecil":["21901","21903","21904","21911","21912","21915","21917","21918","21919","21921"],"charles":["20601","20602","20603","20611","20616","20617","20622","20632","20637","20640","20645","20646","20658","20662","20664","20675","20677","20693","20695"],"dorchester":["21613","21622","21626","21627","21631","21634","21643","21648","21659","21672","21675","21677","21835","21869"],"frederick":["21701","21702","21703","21704","21710","21716","21718","21727","21754","21755","21757","21758","21769","21770","21771","21773","21774","21777","21778","21780","21788","21790","21793","21798"],"garrett":["21520","21522","21523","21531","21536","21538","21541","21550","21561"],"harford":["21001","21005","21009","21010","21014","21015","21017","21028","21034","21040","21047","21050","21078","21084","21085","21132","21154","21160","21161"],"howard":["20723","20759","20763","20777","20794","21029","21036","21042","21043","21044","21045","21046","21075","21104","21163","21723","21737","21738","21794","21797"],"kent":["21610","21620","21635","21645","21650","21651","21661","21667","21678"],"montgomery":["20812","20814","20815","20816","20817","20818","20832","20833","20837","20838","20839","20841","20842","20850","20851","20852","20853","20854","20855","20860","20861","20862","20866","20868","20871","20872","20874","20876","20877","20878","20879","20882","20886","20895","20901","20902","20903","20904","20905","20906","20910","20912"],"princegeorges":["20607","20608","20613","20623","20705","20706","20707","20708","20710","20712","20715","20716","20720","20721","20722","20735","20737","20740","20743","20744","20745","20746","20747","20748","20762","20769","20770","20772","20774","20781","20782","20783","20784","20785"],"queenannes":["21607","21617","21619","21623","21638","21644","21657","21658","21666","21668"],"somerset":["21817","21821","21824","21838","21853","21871"],"stmarys":["20606","20609","20618","20619","20620","20621","20624","20626","20628","20630","20634","20636","20650","20653","20656","20659","20667","20670","20674","20680","20684","20687","20690","20692"],"talbot":["21601","21612","21625","21647","21654","21662","21663","21665","21671","21673","21676","21679"],"washington":["21711","21713","21719","21722","21733","21740","21742","21750","21756","21767","21779","21782","21783","21795"],"wicomico":["21801","21804","21814","21822","21826","21830","21837","21840","21849","21850","21856","21865","21874","21875"],"worcester":["21811","21813","21829","21841","21842","21851","21862","21863","21864","21872"]};
 const ZIP_TO_KEY={};Object.keys(ZIPS).forEach(k=>ZIPS[k].forEach(z=>{ZIP_TO_KEY[z]=k;}));
 const RESOURCES=[
@@ -782,7 +776,7 @@ const ES={
 "Type of letter":"Tipo de carta","Ask for GT screening or referral":"Pedir evaluación o remisión GT","Appeal a decision":"Apelar una decisión","Ask for records or transfer of identification":"Pedir expedientes o traslado de la identificación","Ask for an acceleration review":"Pedir una revisión de aceleración",
 "Copy letter":"Copiar carta","Download letter":"Descargar carta","More help for families":"Más ayuda para las familias",
 "See all 24 school systems at a glance":"Ver los 24 distritos escolares de un vistazo","Has a full time or selective option":"Tiene una opción de tiempo completo o selectiva","Publishes an appeals process":"Publica un proceso de apelación","Has an ESSA plan link":"Tiene enlace al plan ESSA",
-"Report a correction or share feedback":"Informar una corrección o enviar comentarios","What changed in this version":"Qué cambió en esta versión",
+"Report a correction or share feedback":"Informar una corrección o enviar comentarios",
 "Your child's options":"Opciones para su hijo o hija",
 /* results and dynamic */
 "Staff directory (GT teacher)":"Directorio del personal (maestro GT)","Advanced Academics facilitator list":"Lista de facilitadores de Advanced Academics","Optional: ZIP code, comparison, and your school":"Opcional: código postal, comparación y su escuela","Grade":"Grado","{n} selected":"{n} seleccionados","{n} filled in":"{n} completados",
@@ -1689,15 +1683,12 @@ function applyStatic(){
 function renderResources(){
   $("resources-list").innerHTML=RESOURCES.filter(r=>safeUrl(r[1])).map(([t,u,dsc])=>'<li><a href="'+esc(safeUrl(u))+'" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">'+esc(tr(t))+'</a><span>'+esc(tr(dsc))+'</span></li>').join("");
 }
-function renderChanges(){
-  $("changes-list").innerHTML=CHANGELOG.map(([v,t])=>'<li><b>'+esc(v)+'</b> '+esc(t)+'</li>').join("");
-}
 function setLanguage(l,keepAud){
   LANG=l;
   const a=$("audience");
   if(LANG==="es"){AUD="parent";a.value="parent";a.disabled=true;a.closest("label").hidden=true;}
   else{a.disabled=false;a.closest("label").hidden=false;if(!keepAud)AUD=a.value;}
-  buildGradeOptions();applyStatic();renderResources();renderChanges();renderAll();
+  buildGradeOptions();applyStatic();renderResources();renderAll();
   $("build").textContent=(LANG==="es"?"Versión ":"Tool version ")+TOOL_VERSION+(BUILD_ID?" ("+BUILD_ID+")":"")+". "+(LANG==="es"?"Detalles de distritos verificados en ":"District details checked ")+DATA_CHECKED+". "+(LANG==="es"?"Esta página no carga fuentes ni scripts externos. Nada de lo que seleccione se guarda ni se envía; la dirección web puede anotar solo su distrito escolar y el idioma.":"This page loads no outside fonts or scripts. Nothing you select is saved or sent anywhere; the web address may record only your school system and language.")+" "+(OFFICIAL_URL?(LANG==="es"?"Copia oficial: ":"Official copy: ")+OFFICIAL_URL:(LANG==="es"?"Confirme con el subcomité GTAC que tiene la versión actual.":"Check with the GTAC subcommittee that you have the current version."));
   const dw=$("data-warn");if(dw){dw.hidden=!DATA_WARNINGS.length;dw.textContent=DATA_WARNINGS.length?tr("Some school system details could not be loaded correctly and were left out. Please check with your school system."):"";}
   refreshSchools();
