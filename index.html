@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-sFjfonlB+kL2wFGgJfDDl8jRic33jA+3/C5zKZIlBGw='; style-src 'sha256-R0Z8nNbDy36io16LNNOqTmv0/gZUvECCEdr3hmNGdeo='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-l29hUuhsfawZmQebHMlDqIsDy4sUivVcnuEP8rhtBg8='; style-src 'sha256-R0Z8nNbDy36io16LNNOqTmv0/gZUvECCEdr3hmNGdeo='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -783,7 +783,7 @@ function syncGradeLimit(){
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
 const TOOL_VERSION="2026.09.29.1";
-const BUILD_ID="b30294eb84";
+const BUILD_ID="6cc1e80841";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
@@ -883,7 +883,7 @@ const ES={
 "Twice exceptional (GT with an IEP or 504)":"Doble excepcionalidad (GT con IEP o 504)",
 "Listed services that mention it: {list}.":"Servicios listados que lo mencionan: {list}.",
 "This school system's public pages do not describe services for twice exceptional students. Ask who coordinates between special education and GT staff.":"Las páginas públicas de este distrito no describen servicios para estudiantes con doble excepcionalidad. Pregunte quién coordina entre educación especial y el personal GT.",
-"{area}: {list}.":"{area}: {list}.","{area}: none listed for this grade band. Ask whether the district offers it.":"{area}: ninguno listado para este nivel de grado. Pregunte si el distrito lo ofrece.",
+"For {area}, the district lists: {list}.":"Para {area}, el distrito lista: {list}.","Nothing is listed for {area} at this grade band. Ask whether the district offers it.":"No hay nada listado para {area} en este nivel de grado. Pregunte si el distrito lo ofrece.",
 "We do not have school level details for \"{s}\". Ask the school office for its GT contact.":"No tenemos detalles a nivel de escuela para \"{s}\". Pregunte en la oficina de la escuela por su contacto GT.",
 "This school system's public pages do not list school level GT contacts. Ask the school office for its GT contact.":"Las páginas públicas de este distrito no listan contactos GT por escuela. Pregunte en la oficina de la escuela por su contacto GT.",
 "ZIP {z} is in {n}. ZIP codes near county lines can belong to another school system, so confirm with your school system.":"El código postal {z} está en {n}. Los códigos postales cerca de los límites de condados pueden pertenecer a otro distrito, así que confirme con su distrito.",
@@ -1339,7 +1339,7 @@ function schoolContactHTML(hit){
 function schoolInfo(d,st){
   if(!st.school) return null;
   const hit=schoolHit(d,st);
-  if(hit) return "<b>"+esc(hit.name)+(hit.level?' <span class="lvl">('+esc(tr(hit.level))+')</span>':"")+"</b>"+(hit.note?'<p>'+esc(tr("GT contact details for this school are under Who to contact."))+"</p>":"")+schoolNote(d);
+  if(hit) return "<b>"+esc(hit.name)+(hit.level?' <span class="lvl">('+esc(tr(hit.level))+')</span>':"")+"</b>"+(hit.note?'<p>'+linkifyContact("",hit.note)+'</p>'+(safeUrl(hit.url)?'<p><a href="'+esc(safeUrl(hit.url))+'" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">'+esc(tr(hit.urlLabel||"Staff directory (GT teacher)"))+'</a></p>':""):"")+schoolNote(d);
   if(d.schools&&d.schools.length) return "<p>"+esc(trf("We do not have school level details for \"{s}\". Ask the school office for its GT contact.",{s:st.school}))+"</p>"+schoolNote(d);
   return "<p>"+esc(tr("This school system's public pages do not list school level GT contacts. Ask the school office for its GT contact."))+"</p>";
 }
@@ -1391,7 +1391,7 @@ function render(){
       const key=m.length?"y:"+m.join("; "):"n";
       (groups[key]=groups[key]||{m,names:[]}).names.push(tr(STRENGTH_LABEL[k]));
     });
-    const lines=Object.values(groups).map(g=>g.m.length?trf("{area}: {list}.",{area:g.names.join(", "),list:g.m.join("; ")}):trf("{area}: none listed for this grade band. Ask whether the district offers it.",{area:g.names.join(", ")}));
+    const lines=Object.values(groups).map(g=>g.m.length?trf("For {area}, the district lists: {list}.",{area:g.names.join(", ").toLowerCase(),list:g.m.join("; ")}):trf("Nothing is listed for {area} at this grade band. Ask whether the district offers it.",{area:g.names.join(", ").toLowerCase()}));
     off.append(svcRow("yes",tr("Strengths"),"<p>"+lines.map(esc).join("</p><p>")+"</p>"));
   }
   if(st.c.includes("twoe")){
