@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-GmOxeKenJZsk6KYIshFdwUODvlApzbWv0IMKl88ygU8='; style-src 'sha256-zO6BJ4d/lW/W+XUK8VmXDUoK1/u/xLFlWvpL6mCQS0Y='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-2OuM5xKNEQwClOM350DHy8Pt/tX0jVXpI+Jg6IzRk+Q='; style-src 'sha256-p85+dcWtvQ48th+QVcpatrdQhBxH0FCCLiaT7c1Wbm0='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -169,6 +169,8 @@ details.fold>summary::-webkit-details-marker{display:none}
 details.fold>summary::after{content:"\25B8";margin-left:auto;color:var(--muted)}
 details.fold[open]>summary::after{content:"\25BE"}
 details.fold>summary:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.pm::before{content:"+"}
+details[open]>summary>.pm::before{content:"\2212"}
 details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
 .foldbody{padding-top:10px}
 .lvl{color:var(--muted);font-weight:400}
@@ -203,31 +205,26 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
         <legend><span class="n">1</span>School system</legend>
         <select id="district" aria-label="School system"><option value="">Choose your school system</option></select>
         <p class="note">All 24 Maryland school systems. Each one covers a county (or Baltimore City), so if you know your county you know your school system. How much each one publishes about GT services varies, and the results say so.</p>
+        <label class="note mt8" for="zip">Or find it by ZIP code (optional)</label>
+        <input id="zip" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="12345" aria-describedby="zip-note">
+        <p class="note" id="zip-note" aria-live="polite"></p>
       </fieldset>
 
-      <details class="fold" id="fold-more" data-scope="inputs">
-        <summary><span class="n">+</span><span class="st">Optional: ZIP code, comparison, and your school</span><span class="count"></span></summary>
-        <div class="foldbody">
-          <label class="note" for="zip">Or find it by ZIP code (optional)</label>
-          <input id="zip" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="12345" aria-describedby="zip-note">
-          <p class="note" id="zip-note" aria-live="polite"></p>
-          <label class="note" for="compare" class="mt8">Compare with another school system (optional)</label>
-          <select id="compare" aria-label="Compare with another school system"></select>
-          <label class="note" for="school" class="mt8">Your school (optional)</label>
-          <input id="school" maxlength="120" list="school-list" autocomplete="off" placeholder="School name">
-          <datalist id="school-list"></datalist>
-          <p class="note" id="loc-note" aria-live="polite"></p>
-        </div>
-      </details>
+      <fieldset>
+        <legend><span class="n">2</span><span id="school-legend">Your school (optional)</span></legend>
+        <input id="school" maxlength="120" list="school-list" autocomplete="off" placeholder="School name" aria-labelledby="school-legend">
+        <datalist id="school-list"></datalist>
+        <p class="note" id="loc-note" aria-live="polite"></p>
+      </fieldset>
 
       <fieldset>
-        <legend><span class="n">2</span>Grade</legend>
+        <legend><span class="n">3</span>Grade</legend>
         <select id="grade" data-nt></select>
         <p class="note" id="grade-note" aria-live="polite"></p>
       </fieldset>
 
       <fieldset>
-        <legend><span class="n">3</span>Has this school system identified your child as GT?</legend>
+        <legend><span class="n">4</span>Has this school system identified your child as GT?</legend>
         <div class="chips" role="radiogroup" aria-label="Identification status">
           <label class="chip"><input type="radio" name="status" id="s-yes" value="yes"><span>Yes</span></label>
           <label class="chip"><input type="radio" name="status" id="s-no" value="no"><span>No</span></label>
@@ -237,7 +234,7 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
       </fieldset>
 
       <details class="fold" open data-scope="checks">
-        <summary><span class="n">4</span><span class="st">What are you seeing?</span><span class="count"></span></summary>
+        <summary><span class="n">5</span><span class="st">What are you seeing?</span><span class="count"></span></summary>
         <div class="foldbody"><div class="checks">
           <label><input type="checkbox" id="c-bored" value="bored"> My child is bored or already knows the material</label>
           <label><input type="checkbox" id="c-subject" value="subject"> Far ahead in one subject, like math or reading</label>
@@ -247,7 +244,7 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
       </details>
 
       <details class="fold" data-scope="checks">
-        <summary><span class="n">5</span><span class="st">Does anything else apply?</span><span class="count"></span></summary>
+        <summary><span class="n">6</span><span class="st">Does anything else apply?</span><span class="count"></span></summary>
         <div class="foldbody"><div class="checks">
           <label><input type="checkbox" id="c-2e" value="twoe"> My child has an IEP or 504 plan</label>
           <label><input type="checkbox" id="c-fulltime" value="fulltime"> I want to learn about full-time options</label>
@@ -257,7 +254,7 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
       </details>
 
       <details class="fold" data-scope="checks">
-        <summary><span class="n">+</span><span class="st">Strengths (optional)</span><span class="count"></span></summary>
+        <summary><span class="n pm" aria-hidden="true"></span><span class="st">Strengths (optional)</span><span class="count"></span></summary>
         <div class="foldbody"><div class="checks">
           <label><input type="checkbox" id="c-math" value="math"> Math</label>
           <label><input type="checkbox" id="c-ela" value="ela"> Reading and writing</label>
@@ -268,11 +265,17 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
       </details>
 
       <details class="fold" data-scope="inputs">
-        <summary><span class="n">+</span><span class="st">Appealing a decision? (optional)</span><span class="count"></span></summary>
+        <summary><span class="n pm" aria-hidden="true"></span><span class="st">Appealing a decision? (optional)</span><span class="count"></span></summary>
         <div class="foldbody">
           <label class="note" for="appeal-date">Date of the decision letter or review meeting</label>
           <input type="date" id="appeal-date">
           <p class="note">Used only to count days on this page. It is not saved or sent anywhere.</p>
+        </div>
+      </details>
+      <details class="fold" data-scope="inputs">
+        <summary><span class="n pm" aria-hidden="true"></span><span class="st">Compare with another school system (optional)</span><span class="count"></span></summary>
+        <div class="foldbody">
+          <select id="compare" aria-label="Compare with another school system"></select>
         </div>
       </details>
     </form>
@@ -735,7 +738,7 @@ function syncGradeLimit(){
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
 const TOOL_VERSION="2026.09.29.1";
-const BUILD_ID="de26696e3d";
+const BUILD_ID="afd97d80aa";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
