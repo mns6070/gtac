@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-vDK7UhDmGgHh9+GNA6Y7lBN/1Ic2qcxPnuPCBMIhY1A='; style-src 'sha256-R0Z8nNbDy36io16LNNOqTmv0/gZUvECCEdr3hmNGdeo='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-+phHPJY45fqdIPmSWOI9jusAkntVBExbLKB/jfh/YfM='; style-src 'sha256-R0Z8nNbDy36io16LNNOqTmv0/gZUvECCEdr3hmNGdeo='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -371,6 +371,11 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:13px}
       <label><input type="checkbox" id="f-ft"> Has a full time or selective option</label>
       <label><input type="checkbox" id="f-appeal"> Publishes an appeals process</label>
       <label><input type="checkbox" id="f-essa"> Has an ESSA plan link</label>
+      <label><input type="checkbox" id="f-deadline"> Publishes an appeal deadline</label>
+      <label><input type="checkbox" id="f-xfer"> Has steps for students transferring in</label>
+      <label><input type="checkbox" id="f-dates"> Lists dates to watch</label>
+      <label><input type="checkbox" id="f-school"> Lists school level GT contacts</label>
+      <label>Screens in grade <select id="f-grade" aria-label="Screens in grade"><option value="">Any grade</option><option value="0">Kindergarten</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select></label>
     </div>
     <div class="tablewrap"><table id="all-table"></table></div>
     <p class="note" id="all-count"></p>
@@ -783,7 +788,7 @@ function syncGradeLimit(){
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
 const TOOL_VERSION="2026.09.29.1";
-const BUILD_ID="9c0599daee";
+const BUILD_ID="6ada66d19b";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
@@ -804,7 +809,8 @@ const RESOURCES=[
 let LANG="en",AUD="parent";
 
 /* ---------- Spanish. Keys are the exact English strings. District details stay in English. ---------- */
-const ES={
+const SC_ES={"allegany": "PreK a grado 2 para todos los estudiantes; revisión por comité en los grados 3 a 8", "annearundel": "Grados 2, 5 y 7", "baltcity": "Kínder, y después cuando lo indiquen los datos de rendimiento", "baltcounty": "Grados 2 y 5", "calvert": "Grados 2 y 7", "caroline": "Grado 2", "carroll": "Grados 2 y 6", "cecil": "Desde el grado 3, en cualquier momento", "charles": "Grados 2 a 8", "dorchester": "Grado 3 (invierno)", "frederick": "Grados 2 y 5", "garrett": "Grados 2 y 6", "harford": "Grados 2 y 6", "howard": "Desde el grado 3", "kent": "No se publica un grado fijo", "montgomery": "Grado 2, y estudiantes nuevos en los grados 4 y 7", "princegeorges": "Grados 1 y 4", "queenannes": "Nominaciones y portafolio, sin grado fijo", "stmarys": "Grado 3, y estudiantes nuevos en los grados 4 y 5", "somerset": "Grados 2 a 5", "talbot": "Kínder, grado 2 o 3, y grado 5", "washington": "Desde el grado 1", "wicomico": "Grado 2", "worcester": "Grado 3 (primavera)"};
+const ES={"Screening grades":"Grados de evaluación","Transfer steps":"Pasos para traslados","Dates listed":"Fechas indicadas","Yes, {n} {u}":"Sí, {n} {u}","Yes, set dates each year":"Sí, con fechas fijas cada año","Yes, no deadline":"Sí, sin fecha límite","(acceleration only)":"(solo aceleración)","Publishes an appeal deadline":"Publica un plazo de apelación","Has steps for students transferring in":"Tiene pasos para estudiantes que se trasladan","Lists dates to watch":"Indica fechas importantes","Lists school level GT contacts":"Indica contactos de GT por escuela","Screens in grade ":"Evalúa en el grado ","Any grade":"Cualquier grado","Kindergarten":"Kínder","Screens in grade":"Evalúa en el grado","days":"días","calendar days":"días calendario","business days":"días hábiles",
 "Language / Idioma":"Language / Idioma","I am a":"Soy","parent or guardian":"padre, madre o tutor","student":"estudiante",
 "Concept prototype":"Prototipo conceptual","JavaScript needed":"Se necesita JavaScript",
 "Find the right gifted and talented path for your child":"Encuentre el camino adecuado de dotados y talentosos para su hijo o hija",
@@ -1701,15 +1707,28 @@ function reportCorrection(){
 }
 
 /* ---------- all 24 at a glance ---------- */
+const SCREEN_TABLE={"allegany": {"g": [0, 1, 2], "t": "PreK to grade 2 for all students; committee review in grades 3 to 8"}, "annearundel": {"g": [2, 5, 7], "t": "Grades 2, 5, and 7"}, "baltcity": {"g": [0], "t": "Kindergarten, then when achievement data triggers it"}, "baltcounty": {"g": [2, 5], "t": "Grades 2 and 5"}, "calvert": {"g": [2, 7], "t": "Grades 2 and 7"}, "caroline": {"g": [2], "t": "Grade 2"}, "carroll": {"g": [2, 6], "t": "Grades 2 and 6"}, "cecil": {"g": [3], "t": "From grade 3, any time"}, "charles": {"g": [2, 3, 4, 5, 6, 7, 8], "t": "Grades 2 to 8"}, "dorchester": {"g": [3], "t": "Grade 3 (winter)"}, "frederick": {"g": [2, 5], "t": "Grades 2 and 5"}, "garrett": {"g": [2, 6], "t": "Grades 2 and 6"}, "harford": {"g": [2, 6], "t": "Grades 2 and 6"}, "howard": {"g": [3], "t": "From grade 3"}, "kent": {"g": [], "t": "No set grade published"}, "montgomery": {"g": [2], "t": "Grade 2, plus new students in grades 4 and 7"}, "princegeorges": {"g": [1, 4], "t": "Grades 1 and 4"}, "queenannes": {"g": [], "t": "Nominations and portfolio, no set grade"}, "stmarys": {"g": [3], "t": "Grade 3, plus new students in grades 4 and 5"}, "somerset": {"g": [2, 3, 4, 5], "t": "Grades 2 to 5"}, "talbot": {"g": [0, 2, 3, 5], "t": "Kindergarten, grade 2 or 3, and grade 5"}, "washington": {"g": [1], "t": "From grade 1"}, "wicomico": {"g": [2], "t": "Grade 2"}, "worcester": {"g": [3], "t": "Grade 3 (spring)"}};
 let sortKey="name",sortDir=1;
+function appealCell(d){
+  const a=d.appeal;
+  if(appealsGap(d)) return tr("Not found");
+  const acc=a&&/acceleration/i.test(a.to||"");
+  let t;
+  if(a&&a.days) t=trf("Yes, {n} {u}",{n:a.days,u:a.unit?tr(a.unit):tr("days")});
+  else if(a&&a.recurring) t=tr("Yes, set dates each year");
+  else t=tr("Yes, no deadline");
+  return acc?t+" "+tr("(acceleration only)"):t;
+}
+function hasDeadline(d){const a=d.appeal;return !!(a&&(a.days||a.recurring)&&!appealsGap(d));}
+function hasSchoolContacts(d){return (d.schools||[]).some(x=>x&&x.note&&/contact|lead|teacher|coordinator|facilitator|liaison/i.test(x.note));}
 const LEVEL_RANK={detailed:0,partial:1,limited:2};
 function rowInfo(k){
   const d=D[k];
-  return {k,d,name:d.name,level:LEVEL_RANK[d.level],ft:{yes:0,selective:1,no:2}[d.fullTime],appeals:appealsGap(d)?1:0,essa:d.essa?0:1,ident:d.identified?d.identified.pct:-1,coord:coordName(d)};
+  return {k,d,name:d.name,level:LEVEL_RANK[d.level],ft:{yes:0,selective:1,no:2}[d.fullTime],appeals:appealsGap(d)?1:0,essa:d.essa?0:1,ident:d.identified?d.identified.pct:-1,coord:coordName(d),screen:(own(SCREEN_TABLE,k)&&SCREEN_TABLE[k].g.length)?Math.min.apply(null,SCREEN_TABLE[k].g):99,xfer:d.transfer?0:1,dts:-((d.dates||[]).length)};
 }
 function renderAll(){
   const t=$("all-table"); t.innerHTML="";
-  const cols=[["name","School system name","School system"],["level","Public info level","Public info level"],["ft","Full time","Full time"],["appeals","Appeals published","Appeals published"],["essa","ESSA plan","ESSA plan"],["ident","Identified","Identified"],["coord","GT coordinator","GT coordinator"]];
+  const cols=[["name","School system name","School system"],["level","Public info level","Public info level"],["ft","Full time","Full time"],["screen","Screening grades","Screening grades"],["appeals","Appeals published","Appeals published"],["xfer","Transfer steps","Transfer steps"],["dts","Dates listed","Dates listed"],["essa","ESSA plan","ESSA plan"],["ident","Identified","Identified"],["coord","GT coordinator","GT coordinator"]];
   const head=el("tr");
   cols.forEach(([key,label])=>{const th=el("th");th.setAttribute("scope","col");const b=el("button","",esc(tr(label))+(sortKey===key?(sortDir>0?" ▲":" ▼"):""));b.type="button";b.setAttribute("aria-label",trf("Sort by {c}",{c:tr(label)}));b.addEventListener("click",()=>{if(sortKey===key)sortDir=-sortDir;else{sortKey=key;sortDir=1;}renderAll();});th.append(b);head.append(th);});
   head.append(el("th","",'<span class="sr-only">'+esc(tr("Open"))+'</span>'));
@@ -1718,11 +1737,16 @@ function renderAll(){
   if($("f-ft").checked) rows=rows.filter(r=>r.d.fullTime!=="no");
   if($("f-appeal").checked) rows=rows.filter(r=>!r.appeals);
   if($("f-essa").checked) rows=rows.filter(r=>r.d.essa);
+  if($("f-deadline").checked) rows=rows.filter(r=>hasDeadline(r.d));
+  if($("f-xfer").checked) rows=rows.filter(r=>r.d.transfer);
+  if($("f-dates").checked) rows=rows.filter(r=>(r.d.dates||[]).length>0);
+  if($("f-school").checked) rows=rows.filter(r=>hasSchoolContacts(r.d));
+  const sg=$("f-grade").value; if(sg!==""){const gn=Number(sg);rows=rows.filter(r=>own(SCREEN_TABLE,r.k)&&SCREEN_TABLE[r.k].g.includes(gn));}
   rows.sort((a,b)=>{const x=a[sortKey],y=b[sortKey];return (typeof x==="string"?x.localeCompare(y):x-y)*sortDir||a.name.localeCompare(b.name);});
   const tb=el("tbody");
   rows.forEach(r=>{
     const tr_=el("tr");
-    const cells=[esc(r.d.name),esc(tr(LEVEL[r.d.level][1])),esc(ftLabel(r.d)),esc(r.appeals?tr("Not found"):tr("Yes")),safeUrl(r.d.essa)?'<a href="'+esc(safeUrl(r.d.essa))+'" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">'+esc(tr("Link"))+'</a>':esc(tr("none")),esc(r.d.identified?r.d.identified.pct+"%":"—"),esc(r.coord)];
+    const cells=[esc(r.d.name),esc(tr(LEVEL[r.d.level][1])),esc(ftLabel(r.d)),esc(own(SCREEN_TABLE,r.k)?(LANG==="es"?SC_ES[r.k]:SCREEN_TABLE[r.k].t):tr("Not found")),esc(appealCell(r.d)),esc(r.d.transfer?tr("Yes"):tr("Not found")),esc((r.d.dates||[]).length?String((r.d.dates||[]).length):tr("none")),safeUrl(r.d.essa)?'<a href="'+esc(safeUrl(r.d.essa))+'" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">'+esc(tr("Link"))+'</a>':esc(tr("none")),esc(r.d.identified?r.d.identified.pct+"%":"—"),esc(r.coord)];
     cells.forEach(c=>tr_.append(el("td","",c)));
     const td=el("td");const b=el("button","",esc(tr("Open")));b.type="button";b.setAttribute("aria-label",tr("Open")+" "+r.d.name);b.addEventListener("click",()=>{$("district").value=r.k;touched=true;syncControls();refreshSchools();safeRender();window.scrollTo({top:0,behavior:"smooth"});});td.append(b);tr_.append(td);
     tb.append(tr_);
@@ -1860,7 +1884,7 @@ function zipLookup(){
   $("letter-text").addEventListener("input",()=>{letterDirty=true;});
   $("letter-copy").addEventListener("click",()=>copyText($("letter-text").value));
   $("letter-download").addEventListener("click",()=>{const st=state();downloadDocx("gt-letter-"+$("letter-type").value+"-"+slug(D[st.d].short)+".docx",$("letter-text").value,false);});
-  ["f-ft","f-appeal","f-essa"].forEach(id=>$(id).addEventListener("change",renderAll));
+  ["f-ft","f-appeal","f-essa","f-deadline","f-xfer","f-dates","f-school","f-grade"].forEach(id=>$(id).addEventListener("change",renderAll));
   let printState=[];
   window.addEventListener("beforeprint",()=>{printState=[...document.querySelectorAll("details")].map(d=>[d,d.open]);printState.forEach(([d])=>{d.open=true;});});
   window.addEventListener("afterprint",()=>{printState.forEach(([d,o])=>{d.open=o;});printState=[];});
