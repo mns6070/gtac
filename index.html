@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-P2rtAIIkQ+m/jGu/fSGB7Ex86NMWMU7//QieAuP3SHo='; style-src 'sha256-7LTMlZR9hg1uAUHRg1qjqasuUb+18hxi8MkotW0KoTo='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-kYnU7zOpH9HWwIA+KzIUwv3ycVC2m/1EqE0UO0TQMVg='; style-src 'sha256-Vcc9IseM8Q1Dnqg3IF4IAFK5vRSgZ6OpYy2w5PTEJJQ='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -19,6 +19,8 @@
   /* status colors, separate from the action color */
   --ok:#1B6B3A; --ok-soft:#DDF0E3; --info:#1D5A99; --info-soft:#DCE9F7;
   --tap:44px;
+  /* spacing scale: 8, 16, 24, 40 */
+  --s1:8px; --s2:16px; --s3:24px; --s4:40px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -44,11 +46,21 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:var
 .wrap{max-width:1120px;margin:0 auto;padding-block:28px 56px}
 .proto{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:var(--t-sm);color:var(--flag);background:var(--flag-soft);border-radius:8px;padding:10px 14px;margin-bottom:28px}
 .proto strong{font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:var(--t-xs)}
+.proto.slim{background:transparent;border:1px solid var(--flag);border-left-width:4px;padding:6px 12px;margin:var(--s2) 0 0;font-size:var(--t-sm)}
+.topbar{display:flex;flex-wrap:wrap;gap:var(--s1) var(--s2);align-items:center;justify-content:space-between;margin-bottom:var(--s3)}
+.topbar .toolbar{margin:0}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand .mark{flex:none;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;background:var(--accent);color:var(--accent-ink);font-family:var(--serif);font-weight:700;font-size:var(--t-base);letter-spacing:.02em}
+.brand-t{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.brand-t b{font-size:var(--t-base);color:var(--ink)}
+.brand-t span{font-size:var(--t-xs);color:var(--muted)}
+@media (max-width:640px){.brand-t span{display:none}}
 header h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,4.2vw,40px);line-height:1.12;margin:0 0 10px;}
 header p{margin:0;color:var(--muted);font-size:var(--t-base)}
-.grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:28px;margin-top:28px;align-items:start}
+header{margin-bottom:0}
+.grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:var(--s3);margin-top:var(--s3);align-items:start}
 @media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
-form.steps{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:22px;}
+form.steps{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:var(--s3);display:flex;flex-direction:column;gap:var(--s3);}
 @media (max-width:860px){form.steps{position:static;max-height:none;overflow:visible}}
 fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 legend{font-weight:600;font-size:var(--t-sm);margin-bottom:8px;padding:0;display:flex;gap:8px;align-items:baseline}
@@ -65,14 +77,14 @@ select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(-
 .checks label:hover{background:var(--surface-2)}
 .checks input{accent-color:var(--accent);width:24px;height:24px;flex:none}
 .note{font-size:var(--t-sm);color:var(--muted);margin:0}
-.results{display:flex;flex-direction:column;gap:18px;min-width:0}
+.results{display:flex;flex-direction:column;gap:var(--s3);min-width:0}
 .result-head{display:flex;flex-direction:column;gap:14px}
 .result-head h2{font-family:var(--serif);font-size:var(--t-xl);line-height:1.2;margin:0;text-wrap:balance}
 .eyebrow{font-size:var(--t-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 4px;font-weight:600}
 .example{font-size:var(--t-xs);font-weight:600;color:var(--flag);background:var(--flag-soft);border-radius:999px;padding:3px 10px;margin-left:8px;vertical-align:middle;font-family:var(--sans)}
 button.copy{font:inherit;font-weight:600;font-size:var(--t-sm);background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:10px 16px;min-height:var(--tap);cursor:pointer}
 button.copy:hover{filter:brightness(1.08)}
-section.block,details.block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+section.block,details.block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:var(--s3)}
 section.block h3{font-family:var(--serif);font-size:var(--t-lg);margin:0 0 12px;font-weight:600}
 .law{background:var(--surface-2);border-color:transparent}
 .law ul, .block ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
@@ -132,6 +144,7 @@ button.copy.alt{background:transparent;color:var(--accent);border:1px solid var(
 #manual{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
 #manual textarea{width:100%;margin-top:8px;font:inherit;font-size:var(--t-sm);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px}
 .other-grades{color:var(--muted);font-size:var(--t-sm)}
+.svc .scr-sub{margin:10px 0 0}.svc .scr-sub b{color:var(--ink);font-size:var(--t-base)}
 .notice{background:var(--flag-soft);color:var(--flag);border-radius:8px;padding:10px 12px;font-size:var(--t-sm);margin:0}
 .person{display:block;margin-bottom:6px}
 .person .line{display:block}
@@ -161,7 +174,7 @@ noscript .proto{margin-bottom:20px}
 @media print{
   body{background:#fff;color:#000;padding:0}
   :root{--bg:#fff;--surface:#fff;--surface-2:#f2f2f2;--ink:#000;--muted:#333;--line:#999;--accent:#000}
-  form.steps,.btns,.toast,#manual,.proto{display:none!important}
+  form.steps,.btns,.toast,#manual,.proto,.jump,.skips,.totop-row,.head-links{display:none!important}
   .grid{grid-template-columns:minmax(0,1fr);margin-top:8px}
   .wrap{padding-block:0}
   section.block{break-inside:avoid;border-color:#999}
@@ -225,6 +238,44 @@ details.fold[open]>summary::after{content:"\25BE"}
 details.fold>summary:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 form.steps.locked :disabled{cursor:not-allowed}
 .n.pm{display:none}
+.sub{margin:var(--s1) 0 4px;font-size:var(--t-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.sub:first-child{margin-top:0}
+.skips{margin:0}
+.skip{position:absolute;left:-9999px;top:0;background:var(--accent);color:var(--accent-ink);padding:10px 14px;border-radius:0 0 8px 8px;font-weight:600;z-index:10;text-decoration:none}
+.skip:focus{left:16px}
+.head-links{display:flex;flex-wrap:wrap;gap:0 var(--s2);align-items:center}
+.textbtn{font:inherit;font-size:var(--t-sm);color:var(--accent);background:none;border:0;padding:0;min-height:var(--tap);text-decoration:underline;cursor:pointer;display:inline-flex;align-items:center}
+.jump{position:sticky;top:0;z-index:4;display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:var(--s1);background:var(--bg);padding:var(--s1) 0;margin:0 0 calc(-1 * var(--s1))}
+.jump::-webkit-scrollbar{display:none}
+.jump a{flex:none;white-space:nowrap;display:inline-flex;align-items:center;min-height:var(--tap);padding:0 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font-size:var(--t-sm);font-weight:600;text-decoration:none}
+.jump a:hover,.jump a[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.zone{display:flex;flex-direction:column;gap:var(--s3);scroll-margin-top:72px}
+.zone:focus{outline:none}
+.zone-h{margin:var(--s2) 0 0;padding-top:var(--s2);border-top:1px solid var(--line);font-family:var(--sans);font-size:var(--t-sm);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.totop-row{margin:0;text-align:right}
+.totop{display:inline-flex;align-items:center;min-height:var(--tap);font-size:var(--t-sm)}
+details.menu{position:relative}
+details.menu>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:var(--tap);padding:10px 16px;border-radius:8px;font-weight:600;font-size:var(--t-sm);width:100%}
+details.menu>summary{color:var(--accent);background:transparent;border:1px solid var(--accent)}
+details.menu>summary::-webkit-details-marker{display:none}
+details.menu>summary::after{content:"\25BE"}
+details.menu>summary:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.menu-list{position:absolute;right:0;top:calc(100% + 4px);z-index:6;min-width:230px;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.menu-item{font:inherit;font-size:var(--t-sm);text-align:left;color:var(--ink);background:none;border:0;border-radius:6px;padding:0 12px;min-height:var(--tap);cursor:pointer}
+.menu-item:hover{background:var(--surface-2)}
+.menu-item:focus-visible{outline:3px solid var(--focus);outline-offset:-2px}
+.answers-line{display:none}
+dl.gloss{margin:12px 0 0;display:grid;grid-template-columns:minmax(0,10rem) minmax(0,1fr);gap:8px var(--s2)}
+dl.gloss dt{font-weight:600}
+dl.gloss dd{margin:0;color:var(--muted);font-size:var(--t-sm)}
+@media (max-width:640px){dl.gloss{grid-template-columns:minmax(0,1fr);gap:2px}dl.gloss dd{margin-bottom:var(--s1)}}
+@media (max-width:860px){
+  form.steps.collapsed>*:not(.answers-line){display:none!important}
+  form.steps.collapsed>.answers-line{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;font-weight:600}
+}
+.loc-link,.loc-why{display:block}.loc-why{margin-top:4px}
+.form-group{margin:var(--s1) 0 calc(-1 * var(--s1));font-size:var(--t-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.progress{margin:0;font-size:var(--t-sm);color:var(--muted)}
 details.fold .count{font-weight:400;color:var(--muted);font-size:var(--t-sm)}
 .foldbody{padding-top:10px}
 .lvl{color:var(--muted);font-weight:400}
@@ -234,7 +285,7 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:var(--t-sm)}
 .mt8{margin-top:8px}
 .btns-left{justify-content:flex-start;margin-top:8px}
 .head-actions{display:flex;flex-direction:column;align-items:stretch;gap:6px;width:100%}
-.head-actions .btns{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,1fr));gap:8px;justify-content:stretch}
+.head-actions .btns{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:8px;justify-content:stretch}
 .head-actions .btns button{line-height:1.25;text-align:center}
 @media (max-width:640px){.head-actions .btns{grid-template-columns:repeat(2,minmax(0,1fr))}.head-actions .btns #copy,.head-actions .btns #print{grid-column:1 / -1}}
 @media (prefers-contrast:more){
@@ -250,7 +301,7 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:var(--t-sm)}
 .toolbar{flex-wrap:nowrap;gap:8px 14px}
 .toolbar label{display:flex;align-items:center;gap:6px}
 @media (max-width:640px){
-  .toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}.toolbar label{display:block;min-width:0}.toolbar select{width:100%;margin-left:0;font-size:var(--t-sm);padding:8px 10px}
+  .toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:8px}.toolbar label{display:block;min-width:0}.toolbar select{width:100%;margin-left:0;font-size:var(--t-sm);padding:8px 10px}
   .toolbar .lbl{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
   .proto{padding:8px 12px;margin-bottom:16px;font-size:var(--t-sm)}
   header h1{font-size:28px}
@@ -262,16 +313,18 @@ details.fold .count{font-weight:400;color:var(--muted);font-size:var(--t-sm)}
 .pick li{padding-left:26px;position:relative}
 .pick li::before{content:"\2713";position:absolute;left:0;color:var(--ok);font-weight:700}
 .linkbtn{display:none;font:inherit;font-size:var(--t-sm);color:var(--accent);background:none;border:0;padding:0 0 0 0;min-height:var(--tap);text-decoration:underline;cursor:pointer}
-button.see{position:sticky;bottom:12px;width:100%;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:2}
+button.see{width:100%}
 @media (min-width:861px){button.see{display:none}}
 @media (max-width:860px){.linkbtn{display:inline-flex;align-items:center}}
 form.steps.locked>fieldset:not(:first-child),form.steps.locked>details.fold{opacity:1}
 form.steps.locked>fieldset:not(:first-child) :is(select,input:not([type=radio]),.chips){opacity:.55}
 form.steps.locked>details.fold>summary{opacity:.75}
 form.steps.locked>details.fold>.foldbody{opacity:.55}
-.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .summary>div{padding:16px 18px;min-width:0}
 .summary>div+div{border-left:1px solid var(--line)}
+.summary>div:last-child{grid-column:1/-1;border-left:0;border-top:1px solid var(--line);background:var(--accent-soft)}
+.summary>div:last-child p:not(.k){margin:0;font-size:var(--t-base);font-weight:600;color:var(--ink)}
 .summary .k{margin:0 0 6px;font-size:var(--t-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
 .summary b{display:block;font-weight:600}
 .summary p{margin:4px 0 0;font-size:var(--t-sm)}
@@ -290,20 +343,25 @@ form.steps.locked>details.fold>.foldbody{opacity:.55}
 <div class="wrap">
 <main id="main">
   <noscript><div class="proto" role="note"><strong>JavaScript needed</strong><span>This tool needs JavaScript to run. Open the file in a full web browser on a computer or phone. Email previews and some document viewers block scripts, so the page looks empty there.</span></div></noscript>
+  <p class="skips"><a class="skip" href="#f" data-go="district">Skip to the questions</a> <a class="skip" href="#results" data-go="r-title">Skip to your results</a></p>
+  <div class="topbar">
+  <div class="brand"><span class="mark" aria-hidden="true" data-nt>GT</span><span class="brand-t"><b data-nt>GT Pathways Finder</b><span>Maryland GTAC Student/Family Subcommittee</span></span></div>
   <div class="toolbar">
     <label><span class="lbl">Language / Idioma</span> <select id="lang" aria-label="Language / Idioma"><option value="en" data-nt>English</option><option value="es" data-nt>Español</option></select></label>
     <label><span class="lbl">I am a</span> <select id="audience" aria-label="I am a"><option value="parent">parent or guardian</option><option value="student">student</option></select></label>
   </div>
+  </div>
   <div class="proto" id="data-warn" role="alert" hidden></div>
-  <div class="proto" role="note"><strong>Concept prototype</strong><span id="proto-text" data-rich="proto"></span></div>
 
   <header>
     <h1 id="h1">Find the right gifted and talented path for your child</h1>
     <p id="intro" data-rich="intro"></p>
   </header>
+  <div class="proto slim" role="note"><strong>Concept prototype</strong><span id="proto-text" data-rich="proto"></span></div>
 
   <div class="grid">
     <form class="steps" id="f" autocomplete="off">
+      <p class="progress" id="progress" data-dyn hidden></p>
       <fieldset>
         <legend><span class="n">1</span>School system</legend>
         <select id="district" data-dyn aria-label="School system"><option value="">Choose your school system</option></select>
@@ -336,35 +394,29 @@ form.steps.locked>details.fold>.foldbody{opacity:.55}
         </div>
       </fieldset>
 
-      <details class="fold" open data-scope="checks">
-        <summary><span class="n">5</span><span class="st">What are you seeing?</span><span class="count"></span></summary>
-        <div class="foldbody"><div class="checks">
+      <details class="fold" data-scope="checks" id="more-fold">
+        <summary><span class="n pm" aria-hidden="true"></span><span class="st">Tell us more (optional)</span><span class="count"></span></summary>
+        <div class="foldbody">
+          <p class="sub">What are you seeing?</p><div class="checks">
           <label><input type="checkbox" id="c-bored" value="bored"> My child is bored or already knows the material</label>
           <label><input type="checkbox" id="c-subject" value="subject"> Far ahead in one subject, like math or reading</label>
           <label><input type="checkbox" id="c-missed" value="missed"> Shows advanced ability but hasn't been identified</label>
           <label><input type="checkbox" id="c-mismatch" value="mismatch"> Current services don't match my child's needs</label>
-        </div></div>
-      </details>
-
-      <details class="fold" data-scope="checks">
-        <summary><span class="n">6</span><span class="st">Does anything else apply?</span><span class="count"></span></summary>
-        <div class="foldbody"><div class="checks">
+        </div>
+          <p class="sub">Does anything else apply?</p><div class="checks">
           <label><input type="checkbox" id="c-2e" value="twoe"> My child has an IEP or 504 plan</label>
           <label><input type="checkbox" id="c-fulltime" value="fulltime"> I want to learn about full-time options</label>
           <label><input type="checkbox" id="c-nonpublic" value="nonpublic"> My child is in a private school, homeschool, or charter school</label>
           <label><input type="checkbox" id="c-transition" value="transition"> My child moves up to a new school level next year</label>
-        </div></div>
-      </details>
-
-      <details class="fold" data-scope="checks">
-        <summary><span class="n pm" aria-hidden="true"></span><span class="st">Strengths (optional)</span><span class="count"></span></summary>
-        <div class="foldbody"><div class="checks">
+        </div>
+          <p class="sub">Strengths</p><div class="checks">
           <label><input type="checkbox" id="c-math" value="math"> Math</label>
           <label><input type="checkbox" id="c-ela" value="ela"> Reading and writing</label>
           <label><input type="checkbox" id="c-science" value="science"> Science and engineering</label>
           <label><input type="checkbox" id="c-arts" value="arts"> Visual or performing arts</label>
           <label><input type="checkbox" id="c-leadership" value="leadership"> Leadership or creative thinking</label>
-        </div></div>
+        </div>
+        </div>
       </details>
 
       <details class="fold" data-scope="inputs">
@@ -375,13 +427,8 @@ form.steps.locked>details.fold>.foldbody{opacity:.55}
           <p class="note">Used only to count days on this page. It is not saved or sent anywhere.</p>
         </div>
       </details>
-      <details class="fold" data-scope="inputs">
-        <summary><span class="n pm" aria-hidden="true"></span><span class="st">Compare with another school system (optional)</span><span class="count"></span></summary>
-        <div class="foldbody">
-          <select id="compare" data-dyn aria-label="Compare with another school system"></select>
-        </div>
-      </details>
       <button type="button" class="copy see" id="see-results" hidden>See your options</button>
+      <div class="answers-line" id="answers-line" hidden><span id="answers-text" data-dyn></span> <button type="button" class="linkbtn" id="answers-change">Change my answers</button></div>
     </form>
 
     <div class="results" id="results">
@@ -390,14 +437,35 @@ form.steps.locked>details.fold>.foldbody{opacity:.55}
         <div>
           <p class="eyebrow" id="r-eyebrow" data-dyn></p>
           <h2 id="r-title" data-dyn tabindex="-1"></h2>
-          <button type="button" class="linkbtn" id="edit-answers">Change my answers</button>
+          <div class="head-links">
+            <button type="button" class="linkbtn" id="edit-answers">Change my answers</button>
+            <button type="button" class="textbtn" id="start-over">Start over</button>
+            <button type="button" class="textbtn" id="report-top">Report a correction</button>
+          </div>
         </div>
         <div class="head-actions">
-          <div class="btns"><button type="button" class="copy" id="copy">Copy summary for a meeting</button><button type="button" class="copy alt" id="plan">Download my plan</button><button type="button" class="copy alt" id="ics">Add key dates to my calendar</button><button type="button" class="copy alt" id="print">Print</button></div>
+          <div class="btns">
+            <button type="button" class="copy" id="copy">Copy summary</button>
+            <details class="menu" id="share-menu">
+              <summary class="copy alt">Save or share</summary>
+              <div class="menu-list">
+                <button type="button" class="menu-item" id="plan">Download plan</button>
+                <button type="button" class="menu-item" id="ics">Add dates to calendar</button>
+                <button type="button" class="menu-item" id="copylink">Copy link</button>
+                <button type="button" class="menu-item" id="print">Print</button>
+              </div>
+            </details>
+          </div>
           <span class="toast" id="toast" data-dyn></span>
         </div>
       </div>
       <div class="pick" id="pick" hidden></div>
+      <nav class="jump" id="jump" aria-label="On this page">
+        <a href="#z-options" data-go="z-options">Your options</a>
+        <a href="#z-todo" data-go="z-todo">What to do</a>
+        <a href="#z-more" data-go="z-more">Background</a>
+        <a href="#all-block" data-go="all-block">All 24 systems</a>
+      </nav>
       <section class="summary" id="summary" data-al="At a glance" aria-label="At a glance">
         <div><p class="k">Who to call</p><div id="sum-contact" data-dyn></div></div>
         <div><p class="k">Next date</p><div id="sum-date" data-dyn></div></div>
@@ -405,44 +473,34 @@ form.steps.locked>details.fold>.foldbody{opacity:.55}
       </section>
       <div id="manual" hidden><label for="manual-text" class="note">Your browser blocked copying or downloading. Select all of this text and copy it:</label><textarea id="manual-text" data-dyn readonly rows="8"></textarea></div>
 
-      <section class="block">
-        <div class="o-head">
-          <h3 id="o-title" data-dyn>What this school system offers</h3>
-          <span class="level" id="level" data-dyn></span>
-        </div>
-        <p class="note" id="level-note" data-dyn hidden></p>
-        <div class="offer" id="offer" data-dyn></div>
-        <p class="note src" id="d-src" data-dyn></p>
-      </section>
+      <div class="zone" id="z-options" tabindex="-1">
+        <h2 class="zone-h">Your options</h2>
+        <section class="block">
+          <div class="o-head">
+            <h3 id="o-title" data-dyn>What this school system offers</h3>
+            <span class="level" id="level" data-dyn></span>
+          </div>
+          <p class="note" id="level-note" data-dyn hidden></p>
+          <div class="offer" id="offer" data-dyn></div>
+          <p class="note src" id="d-src" data-dyn></p>
+        </section>
+        <div id="extra" data-dyn></div>
+      </div>
 
-      <div id="extra" data-dyn></div>
-
-      <section class="block" id="cmp-block" hidden>
-        <h3>Side by side</h3>
-        <div class="cmp" id="cmp" data-dyn></div>
-      </section>
-
-      <section class="block">
-        <h3>Who to contact</h3>
-        <div class="contact" id="contact" data-dyn></div>
-      </section>
-
-      <details class="block" id="steps-block" open>
-        <summary>Next steps</summary>
-        <ol class="qs" id="steps" data-dyn></ol>
-      </details>
-
-      <section class="block">
-        <h3>Questions to ask</h3>
-        <ol class="qs" id="qs" data-dyn></ol>
-      </section>
-
-      <section class="block law">
-        <h3>What Maryland requires of every school system</h3>
-        <ul id="law-list" data-rich="law"></ul>
-        <p class="cite">COMAR 13A.04.07 · Maryland Model of Gifted and Talented Education</p>
-      </section>
-
+      <div class="zone" id="z-todo" tabindex="-1">
+        <h2 class="zone-h">What to do</h2>
+        <details class="block" id="steps-block" open>
+          <summary>Next steps</summary>
+          <ol class="qs" id="steps" data-dyn start="2"></ol>
+        </details>
+        <section class="block">
+          <h3>Who to contact</h3>
+          <div class="contact" id="contact" data-dyn></div>
+        </section>
+        <section class="block">
+          <h3>Questions to ask</h3>
+          <ol class="qs" id="qs" data-dyn></ol>
+        </section>
       <details class="block" id="letter-block">
         <summary>Draft a letter</summary>
         <p class="note">A starting point you can edit. The optional boxes below fill in your names and contact details, and you can fill in the rest of the [brackets] yourself. Letters are in English. Nothing you type here is saved or sent.</p>
@@ -463,11 +521,41 @@ form.steps.locked>details.fold>.foldbody{opacity:.55}
         <textarea id="letter-text" data-dyn maxlength="6000" rows="16" aria-label="Letter text"></textarea>
         <div class="btns btns-left"><button type="button" class="copy" id="letter-copy">Copy letter</button><button type="button" class="copy alt" id="letter-download">Download letter</button></div>
       </details>
+      </div>
 
+      <div class="zone" id="z-more" tabindex="-1">
+        <h2 class="zone-h">Background</h2>
+      <section class="block law">
+        <h3>What Maryland requires of every school system</h3>
+        <ul id="law-list" data-rich="law"></ul>
+        <p class="cite">COMAR 13A.04.07 · Maryland Model of Gifted and Talented Education</p>
+      </section>
+        <section class="block" id="cmp-pick">
+          <h3>Compare with another school system</h3>
+          <p class="note">Pick a second school system to see the two side by side. To scan all 24 at once, use the table at the bottom of the page.</p>
+          <select id="compare" data-dyn aria-label="Compare with another school system"></select>
+        </section>
+        <section class="block" id="cmp-block" hidden>
+          <h3>Side by side</h3>
+          <div class="cmp" id="cmp" data-dyn></div>
+        </section>
       <details class="block" id="resources-block">
         <summary>More help for families</summary>
         <ul class="resources" id="resources-list" data-dyn></ul>
       </details>
+        <details class="block" id="glossary-block">
+          <summary>Words used on this page</summary>
+          <dl class="gloss">
+            <dt>GT</dt><dd>Short for gifted and talented. A student the school system has identified as having outstanding talent, or the potential for it, compared with others of a similar age and experience.</dd>
+            <dt>Universal screening</dt><dd>Looking at every student in a grade, not only those a teacher or parent nominates, to find who may need GT services.</dd>
+            <dt>CogAT</dt><dd>The Cognitive Abilities Test, a group reasoning test that many Maryland school systems use as one part of GT screening.</dd>
+            <dt>ESSA plan</dt><dd>The Every Student Succeeds Act plan. Each school system writes a Consolidated Strategic Plan that should describe how it serves GT students.</dd>
+            <dt>IEP and 504 plan</dt><dd>Written plans that give extra support to students with disabilities. A student can be gifted and have one of these plans, which is sometimes called twice exceptional or 2e.</dd>
+            <dt>Acceleration</dt><dd>Moving a student ahead in one subject or a whole grade because they are ready, instead of keeping to the usual pace for their age.</dd>
+          </dl>
+        </details>
+      </div>
+      <p class="totop-row"><a class="totop" href="#main" data-go="h1">Back to top</a></p>
     </div>
   </div>
 
@@ -896,8 +984,8 @@ function syncGradeLimit(){
   if(!lim) refreshSchools();
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
-const TOOL_VERSION="2026.10.03.7";
-const BUILD_ID="fb587c806d";
+const TOOL_VERSION="2026.10.03.10";
+const BUILD_ID="e6119520b0";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
@@ -926,9 +1014,10 @@ const ES={"That did not work. Reload the page and try again. If it keeps happeni
 "Language / Idioma":"Language / Idioma","I am a":"Soy","parent or guardian":"padre, madre o tutor","student":"estudiante",
 "Concept prototype":"Prototipo conceptual","JavaScript needed":"Se necesita JavaScript",
 "Find the right gifted and talented path for your child":"Encuentre el camino adecuado de dotados y talentosos para su hijo o hija",
-"School system":"Distrito escolar","Grade band":"Nivel de grado","Has your child been identified as GT?":"¿Su hijo o hija ha sido identificado como GT?","What are you seeing?":"¿Qué está observando?","Does anything else apply?":"¿Aplica algo más?","Strengths (optional)":"Fortalezas (opcional)","Appealing a decision? (optional)":"¿Va a apelar una decisión? (opcional)",
+"School system":"Distrito escolar","Grade band":"Nivel de grado","Has your child been identified as GT?":"¿Su hijo o hija ha sido identificado como GT?","What are you seeing?":"¿Qué está observando?","Does anything else apply?":"¿Aplica algo más?","GT":"GT","Short for gifted and talented. A student the school system has identified as having outstanding talent, or the potential for it, compared with others of a similar age and experience.":"Siglas de dotado y talentoso. Un estudiante que el distrito escolar ha identificado con un talento sobresaliente, o con el potencial para tenerlo, en comparación con otros de edad y experiencia similares.","Universal screening":"Evaluación universal","Looking at every student in a grade, not only those a teacher or parent nominates, to find who may need GT services.":"Revisar a todos los estudiantes de un grado, no solo a los que un maestro o un padre nomina, para encontrar a quienes pueden necesitar servicios GT.","CogAT":"CogAT","The Cognitive Abilities Test, a group reasoning test that many Maryland school systems use as one part of GT screening.":"La Prueba de Habilidades Cognitivas, una prueba grupal de razonamiento que muchos distritos de Maryland usan como una parte de la evaluación GT.","The Every Student Succeeds Act plan. Each school system writes a Consolidated Strategic Plan that should describe how it serves GT students.":"El plan de la ley Every Student Succeeds Act. Cada distrito escolar redacta un Plan Estratégico Consolidado que debería describir cómo atiende a los estudiantes GT.","IEP and 504 plan":"IEP y plan 504","Written plans that give extra support to students with disabilities. A student can be gifted and have one of these plans, which is sometimes called twice exceptional or 2e.":"Planes escritos que dan apoyo adicional a estudiantes con discapacidades. Un estudiante puede ser dotado y tener uno de estos planes, lo que a veces se llama doble excepcionalidad o 2e.","Acceleration":"Aceleración","Moving a student ahead in one subject or a whole grade because they are ready, instead of keeping to the usual pace for their age.":"Adelantar a un estudiante en una materia o en un grado completo porque está listo, en lugar de seguir el ritmo habitual para su edad.",
+"Save or share":"Guardar o compartir","Copy link":"Copiar enlace","Link copied":"Enlace copiado","Start over":"Empezar de nuevo","Report a correction":"Informar de una corrección","On this page":"En esta página","Your options":"Sus opciones","What to do":"Qué hacer","Background":"Contexto","All 24 systems":"Los 24 distritos","Skip to the questions":"Ir a las preguntas","Skip to your results":"Ir a sus resultados","Back to top":"Volver arriba","Words used on this page":"Palabras usadas en esta página","Compare with another school system":"Compare con otro distrito escolar","Pick a second school system to see the two side by side. To scan all 24 at once, use the table at the bottom of the page.":"Elija un segundo distrito escolar para ver los dos lado a lado. Para ver los 24 a la vez, use la tabla al final de la página.","Appealing a decision? (optional)":"¿Va a apelar una decisión? (opcional)",
 
-"Or find it by ZIP code (optional)":"O búsquelo por código postal (opcional)","Compare with another school system (optional)":"Compare con otro distrito escolar (opcional)","Your school (optional)":"Su escuela (opcional)",
+"Or find it by ZIP code (optional)":"O búsquelo por código postal (opcional)","Your school (optional)":"Su escuela (opcional)",
 "PreK to 2":"PreK a 2","Grades 3 to 5":"Grados 3 a 5","Grades 6 to 8":"Grados 6 a 8","Grades 9 to 12":"Grados 9 a 12",
 "Yes":"Sí","No":"No","Not sure":"No estoy seguro",
 "My child is bored or already knows the material":"Mi hijo o hija se aburre o ya conoce el material",
@@ -943,7 +1032,7 @@ const ES={"That did not work. Reload the page and try again. If it keeps happeni
 "Math":"Matemáticas","Reading and writing":"Lectura y escritura","Science and engineering":"Ciencias e ingeniería","Visual or performing arts":"Artes visuales o escénicas","Leadership or creative thinking":"Liderazgo o pensamiento creativo",
 "Date of the decision letter or review meeting":"Fecha de la carta de decisión o de la reunión de revisión",
 "Used only to count days on this page. It is not saved or sent anywhere.":"Solo se usa para contar días en esta página. No se guarda ni se envía a ningún lugar.",
-"Copy summary for a meeting":"Copiar resumen para una reunión","Download my plan":"Descargar mi plan","Add key dates to my calendar":"Agregar fechas clave a mi calendario","Print":"Imprimir",
+"Copy summary":"Copiar resumen","Download plan":"Descargar plan","Add dates to calendar":"Agregar fechas al calendario","Print":"Imprimir",
 "Your browser blocked copying or downloading. Select all of this text and copy it:":"Su navegador bloqueó la copia o la descarga. Seleccione todo este texto y cópielo:",
 "What Maryland requires of every school system":"Lo que Maryland exige a cada distrito escolar",
 "COMAR 13A.04.07 · Maryland Model of Gifted and Talented Education":"COMAR 13A.04.07 · Modelo de Maryland para la Educación de Dotados y Talentosos",
@@ -986,8 +1075,10 @@ const ES={"That did not work. Reload the page and try again. If it keeps happeni
 "Confirmed by {b} on {dt}.":"Confirmado por {b} el {dt}.",
 "Reported share identified: {pct} percent of {scope} ({year}).":"Porcentaje identificado según el plan: {pct} por ciento de {scope} ({year}).",
 "Maryland's rule calls for universal screening to identify at least 10 percent of students in each school system.":"La regla de Maryland pide que la evaluación universal identifique al menos al 10 por ciento de los estudiantes en cada distrito.",
-"Where this comes from: the district GT page and {docs}.":"De dónde viene: la página GT del distrito y {docs}.",
-"Where this comes from: the district GT page.":"De dónde viene: la página GT del distrito.",
+"Also drawn from {docs}.":"También se usó: {docs}.",
+"Maryland GTAC Student/Family Subcommittee":"Subcomité de Estudiantes y Familias del GTAC de Maryland",
+"Tell us more (optional)":"Cuéntenos más (opcional)",
+"{n} of 3 questions answered":"{n} de 3 preguntas respondidas",
 "Nothing published for this grade band":"Nada publicado para este nivel de grado","Public info":"Información pública","Services at this grade":"Servicios en este grado","Full time option":"Opción de tiempo completo","Appeals process":"Proceso de apelación","GT contact":"Contacto GT","Not found on the pages reviewed":"No se encontró en las páginas revisadas","Described":"Descrito",
 "Ask about: ":"Pregunte sobre: ",
 "Full time and selective options":"Opciones de tiempo completo y selectivas","Who":"Quién","Where":"Dónde","How to apply":"Cómo solicitar","Transportation":"Transporte",
@@ -1102,7 +1193,7 @@ const STU={
 "Date of the decision letter or review meeting":"Date of the decision letter or review meeting (a parent or guardian may have it)"
 };
 const RICH={en:{
- proto:"Built for discussion by the GTAC Student/Family Subcommittee. Not an official MSDE or school system tool. Nothing you select is saved or sent anywhere.",
+ proto:"Built for discussion. Not an official MSDE or school system tool. Nothing you select is saved or sent anywhere.",
  intro:"Answer a few questions to see what your school system offers at your child's grade, who to contact, and what to ask.",
  intro_student:"Answer a few questions to see what your school system offers at your grade, who to contact, and what to ask a teacher or counselor.",
  law:"<li>Identify gifted students as early as possible, and <b>no later than grade 3</b>, with more identification points in grades 3 to 5 and 6 to 9.</li><li>Use <b>multiple measures</b> from MSDE's approved list, and keep screening results in writing in your child's record.</li><li>Publish a written identification policy that <b>includes an appeals process</b>.</li><li>Use <b>universal screening</b> to identify a significant number of students in every school and <b>at least 10 percent</b> in each school system.</li><li>Provide a <b>continuum of services</b> beyond the regular program. The state model lists options from pull-out and cluster grouping to subject acceleration, grade skipping, and full-time classrooms.</li><li>Report its GT identification process, programs and services, and goals to MSDE every year in its <b>Local ESSA Consolidated Strategic Plan</b>. This is a public document, and you can ask your school system for its GT section.</li>",
@@ -1110,7 +1201,7 @@ const RICH={en:{
  footer1:"District details were taken from each school system's public website in September 2026 and may be incomplete. District GT coordinators come from MSDE's current list of local GT coordinators. School level contacts come from district websites. A production version would have each school system confirm its own entry every year.",
  footer2:"Sources: <a href=\"https://marylandpublicschools.org/programs/documents/gifted-talented/maryland-model-of-gifted-and-talented-education-a.pdf\" target=\"_blank\" rel=\"noopener noreferrer\" referrerpolicy=\"no-referrer\">Maryland Model</a> · <a href=\"https://regs.maryland.gov/us/md/exec/comar/13A.04.07.02\" target=\"_blank\" rel=\"noopener noreferrer\" referrerpolicy=\"no-referrer\">COMAR 13A.04.07.02</a> · <a href=\"https://marylandpublicschools.org/about/pages/dccr/coordinators-gifted-talented.aspx\" target=\"_blank\" rel=\"noopener noreferrer\" referrerpolicy=\"no-referrer\">MSDE Local GT Coordinators</a> · each school system's GT page, linked in its results"
 },es:{
- proto:"Creado para discusión por el Subcomité de Estudiantes y Familias del GTAC. No es una herramienta oficial de MSDE ni de un distrito escolar. Nada de lo que seleccione se guarda ni se envía a ningún lugar.",
+ proto:"Creado para discusión. No es una herramienta oficial de MSDE ni de un distrito escolar. Nada de lo que seleccione se guarda ni se envía a ningún lugar.",
  intro:"Responda unas preguntas para ver lo que ofrece su distrito escolar en el grado de su hijo o hija, a quién contactar y qué preguntar.",
  law:"<li>Identificar a los estudiantes dotados lo antes posible y <b>a más tardar en 3.er grado</b>, con más puntos de identificación en los grados 3 a 5 y 6 a 9.</li><li>Usar <b>múltiples medidas</b> de la lista aprobada por MSDE y guardar los resultados de evaluación por escrito en el expediente de su hijo o hija.</li><li>Publicar una política de identificación por escrito que <b>incluya un proceso de apelación</b>.</li><li>Usar la <b>evaluación universal</b> para identificar a un número significativo de estudiantes en cada escuela y <b>al menos al 10 por ciento</b> en cada distrito escolar.</li><li>Ofrecer un <b>continuo de servicios</b> más allá del programa regular. El modelo estatal enumera opciones desde grupos de extracción y agrupación en clúster hasta aceleración por materia, salto de grado y aulas de tiempo completo.</li><li>Informar cada año a MSDE su proceso de identificación, programas, servicios y metas en su <b>Plan Estratégico Consolidado ESSA local</b>. Es un documento público y puede pedir a su distrito su sección GT.</li>",
  footer1:"Los detalles de cada distrito se tomaron de su sitio web público en septiembre de 2026 y pueden estar incompletos. Los coordinadores GT vienen de la lista actual de MSDE. Los contactos por escuela vienen de los sitios de los distritos. Una versión de producción pediría a cada distrito confirmar su propia información cada año. La información de cada distrito está en inglés; puede pedir un intérprete o documentos traducidos.",
@@ -1452,9 +1543,6 @@ function build(st){
   steps.push(stepText("final"));
   return {d,qs:[...new Set(qs)],steps};
 }
-function srcLine(d){
-  return d.srcDocs?trf("Where this comes from: the district GT page and {docs}.",{docs:d.srcDocs}):tr("Where this comes from: the district GT page.");
-}
 function sourceLine(d){
   let h=safeUrl(d.url)?tr("Source: ")+'<a href="'+esc(safeUrl(d.url))+'" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">'+esc(trf("{d} GT page",{d:d.short}))+'</a>':esc(tr("No public GT page found."));
   if(safeUrl(d.docUrl)) h+=' · <a href="'+esc(safeUrl(d.docUrl))+'" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">'+esc(trf("{d} advanced learning family handbook",{d:d.short}))+'</a>';
@@ -1465,6 +1553,7 @@ function sourceLine(d){
   }else{
     h+=' · '+esc(tr("ESSA Consolidated Strategic Plan: ")+(d.essaNote||tr("we could not find a public link."))+" "+tr("Ask the district for its GT section."));
   }
+  if(d.srcDocs) h+=' · '+esc(trf("Also drawn from {docs}.",{docs:d.srcDocs}));
   h+=' · '+esc(trf("Details checked {c}.",{c:d.checked}));
   if(d.verified) h+=' '+esc(trf("Confirmed by {b} on {dt}.",{b:d.verified.by,dt:d.verified.date}));
   if(d.identified){
@@ -1531,7 +1620,7 @@ function renderLocator(key){
   if(!L){n.textContent=tr("This school system does not post an address lookup that we could find. Call the school system office to ask which school serves your address.");return;}
   const lab={addr:"Find your school by address",page:"Find your school on the school system's site",list:"Find your school by street name"}[L[1]];
   if(!safeUrl(L[0])){n.textContent="";return;}
-  setHTML(n,H`<a href="${safeUrl(L[0])}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">${tr(lab)}</a> <span class="lvl">(${domainOf(L[0])})</span> ${tr("(opens the school system's website in a new tab)")} ${tr("A ZIP code cannot identify a school, because zones follow streets.")}`);
+  setHTML(n,H`<span class="loc-link"><a href="${safeUrl(L[0])}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">${tr(lab)}</a> <span class="lvl">${domainOf(L[0])}</span><span class="sr-only"> ${tr("(opens the school system's website in a new tab)")}</span></span><span class="loc-why">${tr("A ZIP code cannot identify a school, because zones follow streets.")}</span>`);
 }
 /* A typed school name matches exactly, or by a part of the name when the text is at least 3 letters and only one school fits.
    "More than one fits" is reported separately so the family is asked to pick, instead of being shown the wrong school's contact. */
@@ -1568,7 +1657,7 @@ function renderExtra(d,st,now,ex){
     const a=d.appeal, dl=appealDeadline(a,st.appealDate,now);
     const to=a.to?(a.to+(a.how?", "+a.how:"")):(a.how||"");
     /* A family whose child is already identified is not appealing an identification decision, so the section is there but folded. */
-    const folded=st.s==="yes";
+    const folded=st.s==="yes"||(!st.appealDate&&!st.c.includes("missed")&&!st.c.includes("mismatch"));   /* folded unless a date is entered or a sign of a missed or mismatched service is ticked */
     const sec=el(folded?"details":"section","block");
     if(folded){sec.append(el("summary","",esc(tr("Appealing a decision"))));}
     else sec.append(el("h3","",esc(tr("Appealing a decision"))));
@@ -1586,7 +1675,7 @@ function render(){
   const st=state();
   const R=$("results"),empty=!own(D,st.d)||$("grade").value===""||!document.querySelector('input[name="status"]:checked');
   R.classList.toggle("empty",empty);$("pick").hidden=!empty;$("see-results").hidden=empty;
-  if(empty){
+  if(empty){$("f").classList.remove("collapsed");$("answers-line").hidden=true;
     $("r-eyebrow").textContent="";
     $("r-title").textContent=tr("Start by answering the first three questions");
     const pk=$("pick"); pk.replaceChildren(el("p","",esc(tr("Choose your school system, your child's grade, and whether your child has been identified as GT. Then you will see:"))));
@@ -1628,7 +1717,7 @@ function render(){
     off.append(svcRow(generic?"ask":t,generic?tr("General question"):(t==="yes"?tr("Offered"):tr("Ask about")),"<b>"+esc(b)+"</b>"+(generic?"<p>"+esc(tr("General question, not information from the district."))+"</p>":(p?"<p>"+esc(p)+"</p>":""))));
   });
   const sp=screeningParts(d.screening,st.gn);
-  off.append(svcRow("ask",tr("Screening"),(d.scr?'<p class="scr-grades"><b>'+esc(tr("Grades screened:"))+"</b> "+esc(byLang(d.scr.t,d.scr.es))+"</p>":"")+(sp.relList.length?'<div class="slot"></div>':"<p>"+esc(tr("No screening details for this grade band were published."))+"</p>")+(sp.oth?'<p class="other-grades"><b>'+esc(tr("Other grades:"))+'</b> '+esc(sp.oth)+"</p>":"")+'<p class="other-grades">'+esc(srcLine(d))+"</p>"));
+  off.append(svcRow("ask",tr("Screening"),(d.scr?'<p class="scr-grades"><b>'+esc(tr("Grades screened:"))+"</b> "+esc(byLang(d.scr.t,d.scr.es))+"</p>":"")+(sp.relList.length?'<div class="slot"></div>':"<p>"+esc(tr("No screening details for this grade band were published."))+"</p>")+(sp.oth?'<p class="other-grades scr-sub"><b>'+esc(tr("Other grades:"))+'</b> '+esc(sp.oth)+"</p>":"")));
   {const slot=off.querySelector(".slot");if(slot&&sp.relList.length)slot.replaceWith(screenBullets(sp.relList));}
   if(appealsGap(d)&&st.s!=="yes") off.append(svcRow("ask",tr("Appeals"),"<p>"+esc(tr("Maryland requires a written appeals process. We did not find one on the pages we reviewed for this school system. Ask the school or the GT coordinator for it in writing."))+"</p>"));
   if(st.c.includes("fulltime")) off.append(svcRow("ask",tr("Full time"),"<p>"+esc(d.fulltime)+"</p>"));
@@ -1645,7 +1734,7 @@ function render(){
   const ex=document.createElement("div"); renderExtra(d,st,now,ex);
   const cmpHtml=st.cmp?compareHTML(d,D[st.cmp],st.g,st.gn):null;
   const q=document.createElement("div"); qs.forEach(x=>q.append(el("li","",esc(x))));
-  const s=document.createElement("div"); steps.forEach(x=>s.append(el("li","",esc(x))));
+  const s=document.createElement("div"); steps.slice(1).forEach(x=>s.append(el("li","",esc(x))));   /* step 1 is the First step strip above, so the list continues from 2 */
   const c=document.createElement("div");
   const sh=schoolContactHTML(schoolHit(d,st));
   const groups=[];
@@ -1657,7 +1746,12 @@ function render(){
   const sumC=document.createElement("div"),sumD=document.createElement("div"),sumS=document.createElement("div");
   const hit0=schoolHit(d,st);
   if(hit0&&hit0.note) setHTML(sumC,"<b>"+esc(hit0.name)+"</b><p>"+linkifyContact("",hit0.note.replace(/\s*From the school staff directory, checked [^.]*\.\s*$/,""))+"</p>");   /* the band is a short pointer: the source note and directory link stay in the school card below */
-  else if(d.contact[0]){let v0=d.contact[0][1];if(Array.isArray(v0))v0=v0[0];setHTML(sumC,'<span class="role">'+esc(d.contact[0][0])+"</span>"+contactHTML(d.contact[0][0],v0));}
+  else if(d.contact[0]){let v0=d.contact[0][1];if(Array.isArray(v0))v0=v0[0];
+    let body=contactHTML(d.contact[0][0],v0);
+    if(typeof v0==="string"&&!/[@\d]/.test(v0)){const m=/^([^,]{3,48}),\s+(.+)$/.exec(v0.trim());if(m&&m[1].trim().split(/\s+/).length<=5) body='<span class="person"><span class="line"><b>'+esc(m[1].trim())+'</b></span><span class="role">'+esc(m[2])+"</span></span>";}   /* name first, job title under it */
+    const ph=d.contact.find(c=>/^phone$/i.test(c[0])&&typeof c[1]==="string");
+    if(ph&&typeof v0==="string") body+='<span class="person"><span class="line">'+linkifyContact("Phone",ph[1])+"</span></span>";
+    setHTML(sumC,'<span class="role">'+esc(d.contact[0][0])+"</span>"+body);}
   const dd=d.dates.map(x=>({x,e:dateEntry(x,now)})), t0=o=>new Date(o).getTime();
   const nextD=dd.filter(o=>o.e[0]==="Open now").sort((a,b)=>(a.x.end?t0(a.x.end):1e15)-(b.x.end?t0(b.x.end):1e15))[0]||dd.filter(o=>o.e[0]==="Upcoming").sort((a,b)=>t0(a.x.start)-t0(b.x.start))[0];
   if(nextD) setHTML(sumD,"<b>"+esc(tr(nextD.e[0]))+"</b><p>"+esc(nextD.e[1])+"</p>");
@@ -1671,6 +1765,7 @@ function render(){
   $("offer").replaceChildren(...off.childNodes); $("extra").replaceChildren(...ex.childNodes);
   const cb=$("cmp-block"); if(cmpHtml!==null){cb.hidden=false;$("cmp").replaceChildren(...cmpHtml.childNodes);}else{cb.hidden=true;$("cmp").replaceChildren();}
   $("qs").replaceChildren(...q.childNodes); $("steps").replaceChildren(...s.childNodes); $("contact").replaceChildren(...c.childNodes);
+  {const stt=document.querySelector('input[name="status"]:checked');$("answers-text").textContent=[d.short,gl,stt&&stt.nextElementSibling?stt.nextElementSibling.textContent:""].filter(Boolean).join(" · ");$("answers-line").hidden=false;}
   $("sum-contact").replaceChildren(...sumC.childNodes); $("sum-date").replaceChildren(...sumD.childNodes); $("sum-step").replaceChildren(...sumS.childNodes);
   if(APP.touched) $("status").textContent=trf("Results updated for {d}, {g}.",{d:d.name,g:gl});
   writeHash(st);
@@ -1845,6 +1940,15 @@ async function copyText(t,okMsg,noNamesWarning){
   toast(tr("Your browser blocked copying. The text is below."),true);showManual(t);return false;
 }
 function copySummary(){return copyText(summary());}
+function startOver(){
+  $("zip").value="";$("school").value="";$("grade").value="";$("appeal-date").value="";$("compare").value="";
+  document.querySelectorAll('input[name="status"]').forEach(r=>{r.checked=false;});
+  document.querySelectorAll("#f .checks input").forEach(c=>{c.checked=false;});
+  $("district").value="";
+  $("f").classList.remove("collapsed");
+  $("district").dispatchEvent(new Event("change",{bubbles:true}));
+  window.scrollTo(0,0);$("district").focus();
+}
 function slug(s){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");}
 async function downloadText(name,text,mime){
   let dls=null;
@@ -2069,7 +2173,9 @@ function setLanguage(l,keepAud){
 function syncControls(){
   const locked=!own(D,$("district").value);
   $("f").classList.toggle("locked",locked);
+  {const pg=$("progress");if(pg){const n=(locked?0:1)+(!locked&&$("grade").value?1:0)+(document.querySelector('input[name="status"]:checked')?1:0);pg.textContent=n&&n<3?trf("{n} of 3 questions answered",{n}):"";pg.hidden=!pg.textContent;}}
   $("f").querySelectorAll("input,select").forEach(i=>{if(i.id!=="district"&&i.id!=="zip"&&i.id!=="school")i.disabled=locked;});
+  $("compare").disabled=locked;
   if(!locked&&$("school").disabled){$("school").disabled=false;}
   if(locked) $("school").disabled=true;
   const yes=(document.querySelector('input[name="status"]:checked')||{}).value==="yes";
@@ -2151,17 +2257,29 @@ try{(function init(){
     if(e.target&&e.target.id==="grade")refreshSchools();
     syncControls();safeRender();
   }));
+  $("compare").addEventListener("change",guard("compare",()=>{APP.touched=true;syncControls();safeRender();}));   /* the compare box lives with the background section, outside the form */
   $("f").addEventListener("input",guard("form",e=>{if(e.target&&e.target.id==="zip")zipLookup();if(e.target&&(e.target.id==="school")){APP.touched=true;syncGradeLimit();safeRender();}}));
   $("f").addEventListener("submit",e=>e.preventDefault());
   /* the address bar can be edited by hand or with Back and Forward; the page follows it (replaceState in writeHash does not fire this) */
   window.addEventListener("hashchange",guard("hash",()=>{readHash();districtChanged(true);if($("lang").value!==APP.lang)setLanguage($("lang").value);buildGradeOptions();syncControls();safeRender();}));
   $("lang").addEventListener("change",guard("language",()=>setLanguage($("lang").value)));
-  $("see-results").addEventListener("click",guard("nav",()=>{const h=$("r-title");h.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"});h.focus({preventScroll:true});}));
-  $("edit-answers").addEventListener("click",guard("nav",()=>{const f=$("district");f.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"center"});f.focus({preventScroll:true});}));
+  $("see-results").addEventListener("click",guard("nav",()=>{if(window.matchMedia("(max-width:860px)").matches)$("f").classList.add("collapsed");const h=$("r-title");h.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"});h.focus({preventScroll:true});}));
+  const expandForm=()=>{$("f").classList.remove("collapsed");};
+  $("answers-change").addEventListener("click",guard("nav",()=>{expandForm();const f=$("district");f.scrollIntoView({behavior:"auto",block:"center"});f.focus({preventScroll:true});}));
+  $("edit-answers").addEventListener("click",guard("nav",()=>{expandForm();const f=$("district");f.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"center"});f.focus({preventScroll:true});}));
   $("all-block").addEventListener("toggle",guard("table",()=>{if($("all-block").open&&APP.tableStale)renderAll();}));
   $("audience").addEventListener("change",guard("audience",()=>{APP.aud=$("audience").value;setLanguage(APP.lang,true);}));
   $("copy").addEventListener("click",guard("copy",exclusive("copy",copySummary)));
   $("print").addEventListener("click",()=>window.print());
+  $("copylink").addEventListener("click",guard("copy link",exclusive("copylink",()=>copyText(location.href,tr("Link copied"),true))));
+  $("start-over").addEventListener("click",guard("start over",startOver));
+  $("report-top").addEventListener("click",()=>$("report").click());
+  {const menu=$("share-menu");
+   menu.querySelectorAll(".menu-item").forEach(b=>b.addEventListener("click",()=>{menu.open=false;}));
+   menu.addEventListener("keydown",e=>{if(e.key==="Escape"&&menu.open){menu.open=false;menu.querySelector("summary").focus();}});
+   document.addEventListener("click",e=>{if(menu.open&&!menu.contains(e.target))menu.open=false;});}
+  const reduce=()=>window.matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth";
+  document.querySelectorAll("[data-go]").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();const t=$(a.dataset.go);if(!t)return;if(t.tagName==="DETAILS")t.open=true;t.scrollIntoView({behavior:reduce(),block:"start"});if(t.tabIndex<0||t.matches("input,select,button,textarea,[tabindex]"))t.focus({preventScroll:true});}));
   $("plan").addEventListener("click",guard("plan",exclusive("plan",()=>{const d=currentDistrict();if(!d){chooseFirst();return;}return downloadDocx("gt-plan-"+slug(d.short)+".docx",summary(),true);})));
   $("ics").addEventListener("click",guard("calendar",exclusive("ics",downloadCalendar)));
   $("report").addEventListener("click",guard("report",exclusive("report",reportCorrection)));
