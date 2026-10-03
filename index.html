@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-dGgdTFFkNqIuOaZP3mC6FqtoB6PAN0XX4G2Fo2uO5Ew='; style-src 'sha256-Siq8TTM0CTi+Zbeptzu2gnS94s5qT+a92pr0ck2WwVQ='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Ppag9fLR2QoQTWbmIRaU09gvJtMOE4eYh+sJK+9ykHM='; style-src 'sha256-Siq8TTM0CTi+Zbeptzu2gnS94s5qT+a92pr0ck2WwVQ='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -879,8 +879,8 @@ function syncGradeLimit(){
   sel.dataset.lim=sig; buildGradeOptions(); refreshSchools();
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
-const TOOL_VERSION="2026.10.02.9";
-const BUILD_ID="1e81c33624";
+const TOOL_VERSION="2026.10.02.10";
+const BUILD_ID="84908f4d94";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
@@ -1606,7 +1606,7 @@ function render(){
   groups.forEach(g=>{const html=contactHTML(g.k,g.v);if(!html)return;const extra=g.x.map(([k2,v2])=>contactHTML(k2,v2)).filter(Boolean).map(h=>'<div class="cx">'+h+'</div>').join("");const w=el("div");w.append(el("div","k",esc(g.k)));w.append(el("div","v",html+extra));c.append(w);});
   const sumC=document.createElement("div"),sumD=document.createElement("div"),sumS=document.createElement("div");
   const hit0=schoolHit(d,st);
-  if(hit0&&hit0.note) setHTML(sumC,schoolContactHTML(hit0));
+  if(hit0&&hit0.note) setHTML(sumC,"<b>"+esc(hit0.name)+"</b><p>"+linkifyContact("",hit0.note.replace(/\s*From the school staff directory, checked [^.]*\.\s*$/,""))+"</p>");   /* the band is a short pointer: the source note and directory link stay in the school card below */
   else if(d.contact[0]){let v0=d.contact[0][1];if(Array.isArray(v0))v0=v0[0];setHTML(sumC,'<span class="role">'+esc(d.contact[0][0])+"</span>"+contactHTML(d.contact[0][0],v0));}
   const dd=d.dates.map(x=>({x,e:dateEntry(x,now)})), t0=o=>new Date(o).getTime();
   const nextD=dd.filter(o=>o.e[0]==="Open now").sort((a,b)=>(a.x.end?t0(a.x.end):1e15)-(b.x.end?t0(b.x.end):1e15))[0]||dd.filter(o=>o.e[0]==="Upcoming").sort((a,b)=>t0(a.x.start)-t0(b.x.start))[0];
