@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-zWzphFo8Yd9ryzp4pDQGmiXZULN+mEL7j8yAKrX22Cc='; style-src 'sha256-dHyGhLXzzDQoUd02fda3vqHCkAR3/VFOJNNya9m1bYU='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-99OAnpsFZOtkwnc11ge5c0zqJzmKYirN4qJYNIZgbc4='; style-src 'sha256-7LTMlZR9hg1uAUHRg1qjqasuUb+18hxi8MkotW0KoTo='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -173,7 +173,7 @@ noscript .proto{margin-bottom:20px}
 .toolbar{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:flex-end;margin-bottom:10px;font-size:var(--t-sm);color:var(--muted)}
 .toolbar select{width:auto;padding:6px 10px;margin-left:4px;min-height:var(--tap)}
 input:not([type=checkbox]):not([type=radio]){font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;width:100%;min-height:var(--tap)}
-input:focus-visible,textarea:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+input:focus-visible,textarea:focus-visible,input[type=date]:focus-within{outline:3px solid var(--focus);outline-offset:2px}   /* a date box has several inner fields, and the first one does not always report focus-visible */
 .filters{display:flex;flex-wrap:wrap;gap:8px 18px;margin:12px 0;font-size:var(--t-sm)}
 .filters label{display:flex;gap:10px;align-items:center;min-height:var(--tap)}
 .filters input{width:24px;height:24px;accent-color:var(--accent)}
@@ -896,8 +896,8 @@ function syncGradeLimit(){
   if(!lim) refreshSchools();
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
-const TOOL_VERSION="2026.10.03.4";
-const BUILD_ID="429c7e10e9";
+const TOOL_VERSION="2026.10.03.6";
+const BUILD_ID="3492f191c7";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
@@ -1797,6 +1797,7 @@ function letterKey(st){return JSON.stringify([st.d,st.gr,st.s,[...st.c].sort(),s
 function refreshLetter(force){
   const ta=$("letter-text"),st=state(),key=letterKey(st);
   if(APP.letterDirty&&!force){$("letter-stale").hidden=(key===APP.letterFor);return;}
+  if(!own(D,st.d)) return;   /* no school system chosen, or it was left out of the data: there is no letter to write yet */
   ta.value=letterText($("letter-type").value,st,D[st.d]);
   APP.letterDirty=false; APP.letterFor=key; $("letter-stale").hidden=true;
 }
@@ -2154,23 +2155,23 @@ try{(function init(){
   $("f").addEventListener("submit",e=>e.preventDefault());
   /* the address bar can be edited by hand or with Back and Forward; the page follows it (replaceState in writeHash does not fire this) */
   window.addEventListener("hashchange",guard("hash",()=>{readHash();districtChanged(true);if($("lang").value!==APP.lang)setLanguage($("lang").value);buildGradeOptions();syncControls();safeRender();}));
-  $("lang").addEventListener("change",()=>setLanguage($("lang").value));
+  $("lang").addEventListener("change",guard("language",()=>setLanguage($("lang").value)));
   $("see-results").addEventListener("click",guard("nav",()=>{const h=$("r-title");h.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"});h.focus({preventScroll:true});}));
   $("edit-answers").addEventListener("click",guard("nav",()=>{const f=$("district");f.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"center"});f.focus({preventScroll:true});}));
   $("all-block").addEventListener("toggle",guard("table",()=>{if($("all-block").open&&APP.tableStale)renderAll();}));
-  $("audience").addEventListener("change",()=>{APP.aud=$("audience").value;setLanguage(APP.lang,true);});
+  $("audience").addEventListener("change",guard("audience",()=>{APP.aud=$("audience").value;setLanguage(APP.lang,true);}));
   $("copy").addEventListener("click",guard("copy",exclusive("copy",copySummary)));
   $("print").addEventListener("click",()=>window.print());
   $("plan").addEventListener("click",guard("plan",exclusive("plan",()=>{const d=currentDistrict();if(!d){chooseFirst();return;}return downloadDocx("gt-plan-"+slug(d.short)+".docx",summary(),true);})));
   $("ics").addEventListener("click",guard("calendar",exclusive("ics",downloadCalendar)));
   $("report").addEventListener("click",guard("report",exclusive("report",reportCorrection)));
-  $("letter-type").addEventListener("change",()=>{APP.letterDirty=false;refreshLetter(true);});
-  ["l-parent","l-child","l-contact"].forEach(id=>$(id).addEventListener("input",nameFieldsChanged));
+  $("letter-type").addEventListener("change",guard("letter",()=>{APP.letterDirty=false;refreshLetter(true);}));
+  ["l-parent","l-child","l-contact"].forEach(id=>$(id).addEventListener("input",guard("letter names",nameFieldsChanged)));
   $("letter-text").addEventListener("input",()=>{APP.letterDirty=true;});
-  $("letter-regen").addEventListener("click",()=>{refreshLetter(true);$("letter-text").focus();});
+  $("letter-regen").addEventListener("click",guard("letter",()=>{refreshLetter(true);$("letter-text").focus();}));
   $("letter-copy").addEventListener("click",guard("letter copy",exclusive("lcopy",()=>copyText($("letter-text").value))));
   $("letter-download").addEventListener("click",guard("letter download",exclusive("ldl",()=>{const d=currentDistrict();if(!d){chooseFirst();return;}return downloadDocx("gt-letter-"+$("letter-type").value+"-"+slug(d.short)+".docx",$("letter-text").value,false);})));
-  ["f-ft","f-appeal","f-essa","f-deadline","f-xfer","f-dates","f-school","f-grade"].forEach(id=>$(id).addEventListener("change",renderAll));
+  ["f-ft","f-appeal","f-essa","f-deadline","f-xfer","f-dates","f-school","f-grade"].forEach(id=>$(id).addEventListener("change",guard("table",renderAll)));
   $("f-sort").addEventListener("change",guard("table",()=>{APP.sortKey=$("f-sort").value;APP.sortDir=1;renderAll();}));
   let printState=[];
   window.addEventListener("beforeprint",()=>{printState=[...document.querySelectorAll("details")].map(d=>[d,d.open]);printState.forEach(([d])=>{d.open=true;});});
@@ -2185,7 +2186,7 @@ try{(function init(){
   n.textContent="The tool could not start. Reload the page. If this keeps happening, tell the GTAC Student/Family Subcommittee and use Copy diagnostics at the bottom of the page.";
   const w=document.querySelector(".wrap"); if(w) w.prepend(n);
 }
-$("diag").addEventListener("click",()=>{copyText(diagnosticsText(),tr("Diagnostics copied. Paste them into an email to the GTAC Student/Family Subcommittee."),true);});
+$("diag").addEventListener("click",guard("diagnostics",()=>{copyText(diagnosticsText(),tr("Diagnostics copied. Paste them into an email to the GTAC Student/Family Subcommittee."),true);}));
 
 </script>
 </body>
