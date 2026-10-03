@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-XqnAiKfdzRl+WcnPNiOVaHVACrM7EKuFa+Vl+bABTmE='; style-src 'sha256-wSOAL9XhsL1DMZADP3PGF9lQ7+G6wayO9oqz98hY9M4='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-zWzphFo8Yd9ryzp4pDQGmiXZULN+mEL7j8yAKrX22Cc='; style-src 'sha256-dHyGhLXzzDQoUd02fda3vqHCkAR3/VFOJNNya9m1bYU='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -281,7 +281,8 @@ form.steps.locked>details.fold>.foldbody{opacity:.55}
 .summary a[href^="tel:"]{white-space:nowrap}
 @media (max-width:860px){.summary{grid-template-columns:minmax(0,1fr)}.summary>div+div{border-left:0;border-top:1px solid var(--line)}}
 .svc .scr-grades{color:var(--ink);font-size:var(--t-base);margin:0 0 6px}
-.svc p.sent{margin:0 0 6px}
+.svc ul.sl,.cmp-c ul.sl{margin:2px 0 6px;padding-left:1.2em;color:var(--muted);font-size:var(--t-sm)}
+.svc ul.sl li,.cmp-c ul.sl li{margin:0 0 5px;padding-left:2px}
 </style>
 
 </head>
@@ -895,8 +896,8 @@ function syncGradeLimit(){
   if(!lim) refreshSchools();
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
-const TOOL_VERSION="2026.10.03.3";
-const BUILD_ID="3787d49d11";
+const TOOL_VERSION="2026.10.03.4";
+const BUILD_ID="429c7e10e9";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
@@ -1363,6 +1364,17 @@ function screeningParts(text,g){
   splitSentences(text).forEach(s=>{const gs=gradesIn(s);if(!gs.size||[...gs].some(n=>band.has(n)))rel.push(s);else oth.push(s);});
   return {rel:rel.join(" "),oth:oth.join(" "),relList:rel,othList:oth};
 }
+/* Sentences that only continue the one before them stay attached to it, so each bullet is one whole point. */
+function bulletSentences(list){
+  const out=[];
+  list.forEach(x=>{if(out.length&&/^(Also|This|These|Those|They|It|Its|Their|Such|Both|Schools must also)\b/.test(x))out[out.length-1]+=" "+x;else out.push(x);});
+  return out;
+}
+function screenBullets(list){
+  const ul=document.createElement("ul");ul.className="sl";
+  bulletSentences(list).forEach(x=>{const li=document.createElement("li");li.textContent=x;ul.append(li);});
+  return ul;
+}
 function appealsGap(d){
   const t=d.screening+" "+JSON.stringify(d.grades)+" "+(d.appeal?"appeal":"");
   if(!/appeal/i.test(t)) return true;
@@ -1471,7 +1483,7 @@ function compareCol(d,g,gn){
   const svc=generic?"<p>"+esc(tr("Nothing published for this grade band"))+"</p>"
     :items.map(([t,b])=>'<div class="ci"><span class="tag '+(t==="yes"?"yes":"ask")+'">'+esc(t==="yes"?tr("Offered"):tr("Ask about"))+"</span><b>"+esc(b)+"</b></div>").join("");
   const scr=(d.scr?'<p class="scr-grades"><b>'+esc(tr("Grades screened:"))+"</b> "+esc(byLang(d.scr.t,d.scr.es))+"</p>":"")
-    +((sp.relList&&sp.relList.length)?sp.relList.map(x=>'<p class="sent">'+esc(x)+"</p>").join(""):"<p>"+esc(sp.rel||d.screening||tr("No screening details for this grade band were published."))+"</p>");
+    +((sp.relList&&sp.relList.length)?'<div class="slot"></div>':"<p>"+esc(sp.rel||d.screening||tr("No screening details for this grade band were published."))+"</p>");
   return [
     ["Public info",'<span class="pill">'+esc(tr(LEVEL[d.level][1]))+"</span>"],
     ["Services at this grade",svc],
@@ -1489,7 +1501,10 @@ function compareHTML(d1,d2,g,gn){
       +'<div class="cmp-c"><span class="who">'+esc(d1.short||d1.name)+'</span>'+row[1]+'</div>'
       +'<div class="cmp-c"><span class="who">'+esc(d2.short||d2.name)+'</span>'+B[i][1]+'</div>';
   });
-  return out;
+  const box=document.createElement("div");setHTML(box,out);
+  const slots=box.querySelectorAll(".slot");let si=0;
+  [d1,d2].forEach(d=>{const sp=screeningParts(d.screening,typeof gn==="number"?gn:g);if(sp.relList&&sp.relList.length){const sl=slots[si++];if(sl)sl.replaceWith(screenBullets(sp.relList));}});
+  return box;
 }
 function matchList(items,re){return items.filter(([t,b,p])=>re.test(b+" "+p)).map(([t,b])=>b);}
 function schoolNote(d){
@@ -1613,7 +1628,8 @@ function render(){
     off.append(svcRow(generic?"ask":t,generic?tr("General question"):(t==="yes"?tr("Offered"):tr("Ask about")),"<b>"+esc(b)+"</b>"+(generic?"<p>"+esc(tr("General question, not information from the district."))+"</p>":(p?"<p>"+esc(p)+"</p>":""))));
   });
   const sp=screeningParts(d.screening,st.gn);
-  off.append(svcRow("ask",tr("Screening"),(d.scr?'<p class="scr-grades"><b>'+esc(tr("Grades screened:"))+"</b> "+esc(byLang(d.scr.t,d.scr.es))+"</p>":"")+(sp.relList.length?sp.relList.map(x=>'<p class="sent">'+esc(x)+"</p>").join(""):"<p>"+esc(tr("No screening details for this grade band were published."))+"</p>")+(sp.oth?'<p class="other-grades"><b>'+esc(tr("Other grades:"))+'</b> '+esc(sp.oth)+"</p>":"")+'<p class="other-grades">'+esc(srcLine(d))+"</p>"));
+  off.append(svcRow("ask",tr("Screening"),(d.scr?'<p class="scr-grades"><b>'+esc(tr("Grades screened:"))+"</b> "+esc(byLang(d.scr.t,d.scr.es))+"</p>":"")+(sp.relList.length?'<div class="slot"></div>':"<p>"+esc(tr("No screening details for this grade band were published."))+"</p>")+(sp.oth?'<p class="other-grades"><b>'+esc(tr("Other grades:"))+'</b> '+esc(sp.oth)+"</p>":"")+'<p class="other-grades">'+esc(srcLine(d))+"</p>"));
+  {const slot=off.querySelector(".slot");if(slot&&sp.relList.length)slot.replaceWith(screenBullets(sp.relList));}
   if(appealsGap(d)&&st.s!=="yes") off.append(svcRow("ask",tr("Appeals"),"<p>"+esc(tr("Maryland requires a written appeals process. We did not find one on the pages we reviewed for this school system. Ask the school or the GT coordinator for it in writing."))+"</p>"));
   if(st.c.includes("fulltime")) off.append(svcRow("ask",tr("Full time"),"<p>"+esc(d.fulltime)+"</p>"));
   else if(d.fullTime==="yes") off.append(svcRow("ask",tr("Full time"),"<p>"+esc(tr("This school system has a full time option. Tick \"I want to learn about full-time options\" for details."))+"</p>"));
@@ -1653,7 +1669,7 @@ function render(){
   const ln=$("level-note"); if(lnText!==null){ln.textContent=lnText;ln.hidden=false;}else{ln.hidden=true;}
   setHTML($("d-src"),srcHtml);
   $("offer").replaceChildren(...off.childNodes); $("extra").replaceChildren(...ex.childNodes);
-  const cb=$("cmp-block"); if(cmpHtml!==null){cb.hidden=false;setHTML($("cmp"),cmpHtml);}else{cb.hidden=true;$("cmp").replaceChildren();}
+  const cb=$("cmp-block"); if(cmpHtml!==null){cb.hidden=false;$("cmp").replaceChildren(...cmpHtml.childNodes);}else{cb.hidden=true;$("cmp").replaceChildren();}
   $("qs").replaceChildren(...q.childNodes); $("steps").replaceChildren(...s.childNodes); $("contact").replaceChildren(...c.childNodes);
   $("sum-contact").replaceChildren(...sumC.childNodes); $("sum-date").replaceChildren(...sumD.childNodes); $("sum-step").replaceChildren(...sumS.childNodes);
   if(APP.touched) $("status").textContent=trf("Results updated for {d}, {g}.",{d:d.name,g:gl});
