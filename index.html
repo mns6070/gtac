@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-yYwNbUmwvvQqunYvCc5t6XQWtZVb1gzAmy6EF7XApxw='; style-src 'sha256-Siq8TTM0CTi+Zbeptzu2gnS94s5qT+a92pr0ck2WwVQ='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-XqnAiKfdzRl+WcnPNiOVaHVACrM7EKuFa+Vl+bABTmE='; style-src 'sha256-wSOAL9XhsL1DMZADP3PGF9lQ7+G6wayO9oqz98hY9M4='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -137,12 +137,26 @@ button.copy.alt{background:transparent;color:var(--accent);border:1px solid var(
 .person .line{display:block}
 .person .role{display:block;font-weight:400;color:var(--muted);font-size:var(--t-sm)}
 .contact .v a{color:var(--accent)}
-.cmp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-@media (max-width:640px){.cmp{grid-template-columns:minmax(0,1fr)}}
+.cmp{display:grid;grid-template-columns:9.5rem repeat(2,minmax(0,1fr));gap:0 18px}
 .cmp a{color:var(--accent)}
-.cmp h4{font-family:var(--serif);font-size:var(--t-base);margin:0 0 8px}
-.cmp p{margin:0 0 8px;font-size:var(--t-sm)}
-.cmp p.k{margin:10px 0 2px;font-size:var(--t-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.cmp>h4{font-family:var(--serif);font-size:var(--t-base);margin:0;padding:0 0 10px;align-self:end}
+.cmp-k,.cmp-c{padding:12px 0;border-top:1px solid var(--line);min-width:0}
+.cmp-k{font-size:var(--t-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.cmp-c p{margin:0 0 6px;color:var(--muted);font-size:var(--t-sm)}
+.cmp-c p:last-child{margin-bottom:0}
+.cmp-c .scr-grades{color:var(--ink);font-size:var(--t-base)}
+.cmp-c .ci{display:flex;gap:8px;align-items:baseline;margin:0 0 6px;font-size:var(--t-sm)}
+.cmp-c .ci .tag{flex:none}
+.cmp-c .ci b{font-weight:600}
+.cmp-c .pill{display:inline-block;font-size:var(--t-xs);font-weight:700;background:var(--surface-2);border-radius:999px;padding:4px 10px}
+.cmp-c .who{display:none}
+@media (max-width:640px){
+  .cmp{grid-template-columns:minmax(0,1fr)}
+  .cmp>h4,.cmp>.cmp-h{display:none}
+  .cmp-k{border-top:2px solid var(--line);padding:14px 0 4px}
+  .cmp-c{border-top:0;padding:6px 0}
+  .cmp-c .who{display:block;font-weight:700;color:var(--ink);font-size:var(--t-sm);margin:0 0 4px}
+}
 noscript .proto{margin-bottom:20px}
 @media print{
   body{background:#fff;color:#000;padding:0}
@@ -153,7 +167,7 @@ noscript .proto{margin-bottom:20px}
   section.block{break-inside:avoid;border-color:#999}
   a{color:#000;text-decoration:underline}
   .contact .v a[href^="http"]::after,.src a::after{content:" (" attr(href) ")";font-weight:400;font-size:11px;word-break:break-all}
-  .two,.cmp{grid-template-columns:minmax(0,1fr)}
+  .two{grid-template-columns:minmax(0,1fr)}
 }
 
 .toolbar{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:flex-end;margin-bottom:10px;font-size:var(--t-sm);color:var(--muted)}
@@ -876,11 +890,13 @@ function syncGradeLimit(){
   const lim=gradeLimit(),sel=$("grade");
   const sig=lim?lim.join(","):"";
   if(sig===(sel.dataset.lim||"")) return;
-  sel.dataset.lim=sig; buildGradeOptions(); refreshSchools();
+  sel.dataset.lim=sig; buildGradeOptions();
+  /* Rebuilding the suggestion list while the browser is showing it keeps the popup on screen after a pick, so a chosen school leaves the list alone. */
+  if(!lim) refreshSchools();
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
-const TOOL_VERSION="2026.10.03.1";
-const BUILD_ID="222e3dcf39";
+const TOOL_VERSION="2026.10.03.3";
+const BUILD_ID="3787d49d11";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
@@ -939,7 +955,7 @@ const ES={"That did not work. Reload the page and try again. If it keeps happeni
 "Report a correction or share feedback":"Informar una corrección o enviar comentarios",
 "Your child's options":"Opciones para su hijo o hija",
 /* results and dynamic */
-"Staff directory (GT teacher)":"Directorio del personal (maestro GT)","Advanced Academics facilitator list":"Lista de facilitadores de Advanced Academics","Optional: ZIP code, comparison, and your school":"Opcional: código postal, comparación y su escuela","Grade":"Grado","{n} selected":"{n} seleccionados","{n} filled in":"{n} completados",
+"Staff directory (GT teacher)":"Directorio del personal (maestro GT)","Advanced Academics facilitator list":"Lista de facilitadores de Advanced Academics","Optional: ZIP code, comparison, and your school":"Opcional: código postal, comparación y su escuela","Grade":"Grado","{n} selected":"{n} seleccionados",
 "Elementary":"Primaria","Middle":"Intermedia","High":"Preparatoria","PreK to 8":"Prekínder a 8","Grades 3 to 8":"Grados 3 a 8","Grades 1 to 8":"Grados 1 a 8","Grades 1 to 12":"Grados 1 a 12","PreK to 12":"Prekínder a 12","Grades 4 to 8":"Grados 4 a 8","Grades 5 to 8":"Grados 5 a 8","PreK to 6":"Prekínder a 6","Kindergarten to 8":"Kínder a 8","Other":"Otra",
 "School list: Maryland State Report Card and district pages, checked September 2026.":"Lista de escuelas: Boletín Estatal de Maryland y páginas de los distritos, verificada en septiembre de 2026.",
 "This school list may be incomplete. Ask the school office if yours is missing.":"Esta lista de escuelas puede estar incompleta. Pregunte en la oficina de la escuela si falta la suya.",
@@ -972,7 +988,7 @@ const ES={"That did not work. Reload the page and try again. If it keeps happeni
 "Where this comes from: the district GT page and {docs}.":"De dónde viene: la página GT del distrito y {docs}.",
 "Where this comes from: the district GT page.":"De dónde viene: la página GT del distrito.",
 "Nothing published for this grade band":"Nada publicado para este nivel de grado","Public info":"Información pública","Services at this grade":"Servicios en este grado","Full time option":"Opción de tiempo completo","Appeals process":"Proceso de apelación","GT contact":"Contacto GT","Not found on the pages reviewed":"No se encontró en las páginas revisadas","Described":"Descrito",
-"Offered: ":"Ofrecido: ","Ask about: ":"Pregunte sobre: ",
+"Ask about: ":"Pregunte sobre: ",
 "Full time and selective options":"Opciones de tiempo completo y selectivas","Who":"Quién","Where":"Dónde","How to apply":"Cómo solicitar","Transportation":"Transporte",
 "Appealing a decision":"Cómo apelar una decisión","Send it to":"Enviar a","Deadline":"Fecha límite","Include":"Incluir","What happens next":"Qué sigue",
 "{n} {unit} from {from}. Enter the date in the form to see the deadline.":"{n} {unit} desde {from}. Ingrese la fecha en el formulario para ver la fecha límite.",
@@ -1448,17 +1464,32 @@ function sourceLine(d){
 }
 function ftLabel(d){return d.fullTime==="yes"?tr("Yes"):d.fullTime==="selective"?tr("Selective"):tr("None listed");}
 function compareCol(d,g,gn){
+  /* One entry per row of the side by side grid, so the two systems line up row by row. */
   const {items,generic}=offers(d,g);
-  const names=generic?tr("Nothing published for this grade band"):items.map(([t,b])=>(t==="yes"?tr("Offered: "):tr("Ask about: "))+b).join("; ");
   const sp=screeningParts(d.screening,typeof gn==="number"?gn:g);
   const first=d.contact[0]?contactHTML(d.contact[0][0],d.contact[0][1]):"";
-  return '<div><h4>'+esc(d.name)+'</h4>'+
-    '<p class="k">'+esc(tr("Public info"))+'</p><p>'+esc(tr(LEVEL[d.level][1]))+'</p>'+
-    '<p class="k">'+esc(tr("Services at this grade"))+'</p><p>'+esc(names)+'</p>'+
-    '<p class="k">'+esc(tr("Screening"))+'</p><p>'+esc(sp.rel||d.screening)+'</p>'+
-    '<p class="k">'+esc(tr("Full time option"))+'</p><p>'+esc(ftLabel(d)+". "+d.fulltime)+'</p>'+
-    '<p class="k">'+esc(tr("Appeals process"))+'</p><p>'+esc(appealsGap(d)?tr("Not found on the pages reviewed"):tr("Described"))+'</p>'+
-    '<p class="k">'+esc(tr("GT contact"))+'</p><p>'+first+'</p></div>';
+  const svc=generic?"<p>"+esc(tr("Nothing published for this grade band"))+"</p>"
+    :items.map(([t,b])=>'<div class="ci"><span class="tag '+(t==="yes"?"yes":"ask")+'">'+esc(t==="yes"?tr("Offered"):tr("Ask about"))+"</span><b>"+esc(b)+"</b></div>").join("");
+  const scr=(d.scr?'<p class="scr-grades"><b>'+esc(tr("Grades screened:"))+"</b> "+esc(byLang(d.scr.t,d.scr.es))+"</p>":"")
+    +((sp.relList&&sp.relList.length)?sp.relList.map(x=>'<p class="sent">'+esc(x)+"</p>").join(""):"<p>"+esc(sp.rel||d.screening||tr("No screening details for this grade band were published."))+"</p>");
+  return [
+    ["Public info",'<span class="pill">'+esc(tr(LEVEL[d.level][1]))+"</span>"],
+    ["Services at this grade",svc],
+    ["Screening",scr],
+    ["Full time option","<p><b>"+esc(ftLabel(d))+"</b></p>"+(d.fulltime?"<p>"+esc(d.fulltime)+"</p>":"")],
+    ["Appeals process","<p>"+esc(appealsGap(d)?tr("Not found on the pages reviewed"):tr("Described"))+"</p>"],
+    ["GT contact","<p>"+(first||esc(tr("Not found")))+"</p>"]
+  ];
+}
+function compareHTML(d1,d2,g,gn){
+  const A=compareCol(d1,g,gn),B=compareCol(d2,g,gn);
+  let out='<div class="cmp-h" aria-hidden="true"></div><h4>'+esc(d1.name)+'</h4><h4>'+esc(d2.name)+'</h4>';
+  A.forEach((row,i)=>{
+    out+='<div class="cmp-k">'+esc(tr(row[0]))+'</div>'
+      +'<div class="cmp-c"><span class="who">'+esc(d1.short||d1.name)+'</span>'+row[1]+'</div>'
+      +'<div class="cmp-c"><span class="who">'+esc(d2.short||d2.name)+'</span>'+B[i][1]+'</div>';
+  });
+  return out;
 }
 function matchList(items,re){return items.filter(([t,b,p])=>re.test(b+" "+p)).map(([t,b])=>b);}
 function schoolNote(d){
@@ -1596,7 +1627,7 @@ function render(){
     if(nsp.rel) off.append(svcRow("ask",tr("Screening then"),"<p>"+esc(nsp.rel)+"</p>"));
   }
   const ex=document.createElement("div"); renderExtra(d,st,now,ex);
-  const cmpHtml=st.cmp?compareCol(d,st.g,st.gn)+compareCol(D[st.cmp],st.g,st.gn):null;
+  const cmpHtml=st.cmp?compareHTML(d,D[st.cmp],st.g,st.gn):null;
   const q=document.createElement("div"); qs.forEach(x=>q.append(el("li","",esc(x))));
   const s=document.createElement("div"); steps.forEach(x=>s.append(el("li","",esc(x))));
   const c=document.createElement("div");
@@ -2059,10 +2090,10 @@ function refreshSchools(){
 function updateCounts(){
   document.querySelectorAll("details.fold").forEach(f=>{
     const out=f.querySelector(".count"); if(!out) return;
-    let n=0,sel=f.dataset.scope==="checks";
-    if(sel) n=f.querySelectorAll(".checks input:checked").length;
-    else f.querySelectorAll("input,select").forEach(i=>{if(i.value)n++;});
-    out.textContent=n?" · "+trf(sel?"{n} selected":"{n} filled in",{n}):"";
+    /* Only the checklists keep a count. A single date or dropdown already shows its own value, so a count of one adds nothing. */
+    if(f.dataset.scope!=="checks"){out.textContent="";return;}
+    const n=f.querySelectorAll(".checks input:checked").length;
+    out.textContent=n?" · "+trf("{n} selected",{n}):"";
   });
 }
 /* One sequence for "the school system changed", used by the dropdown and the ZIP lookup (a ZIP keeps what was typed in the ZIP box). */
