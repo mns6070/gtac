@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-kYnU7zOpH9HWwIA+KzIUwv3ycVC2m/1EqE0UO0TQMVg='; style-src 'sha256-Vcc9IseM8Q1Dnqg3IF4IAFK5vRSgZ6OpYy2w5PTEJJQ='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-OLxtAVibv5hnyNRcVrZv3HOZ/dwew9l8QYYsuhhuRBY='; style-src 'sha256-Vcc9IseM8Q1Dnqg3IF4IAFK5vRSgZ6OpYy2w5PTEJJQ='; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -984,8 +984,8 @@ function syncGradeLimit(){
   if(!lim) refreshSchools();
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
-const TOOL_VERSION="2026.10.03.10";
-const BUILD_ID="e6119520b0";
+const TOOL_VERSION="2026.10.04.2";
+const BUILD_ID="f21d89a01d";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
@@ -1338,6 +1338,12 @@ function contactHTML(label,v){
   }
   return linkifyContact(label,v);
 }
+function nameRoleHTML(v){   /* a plain "Name, Job title" string, shown the same way as a structured contact */
+  if(typeof v!=="string"||/[@\d]/.test(v)) return "";
+  const m=/^([^,]{3,48}),\s+(.+)$/.exec(v.trim());
+  if(!m||m[1].trim().split(/\s+/).length>5) return "";
+  return '<span class="person"><span class="line"><b>'+esc(m[1].trim())+'</b></span><span class="role">'+esc(m[2])+"</span></span>";
+}
 function coordName(d){
   const c=d.contact[0]; if(!c) return "";
   const v=c[1];
@@ -1568,7 +1574,8 @@ function compareCol(d,g,gn){
   /* One entry per row of the side by side grid, so the two systems line up row by row. */
   const {items,generic}=offers(d,g);
   const sp=screeningParts(d.screening,typeof gn==="number"?gn:g);
-  const first=d.contact[0]?contactHTML(d.contact[0][0],d.contact[0][1]):"";
+  const c0=d.contact[0]?(Array.isArray(d.contact[0][1])?d.contact[0][1][0]:d.contact[0][1]):null;
+  const first=d.contact[0]?(nameRoleHTML(c0)||contactHTML(d.contact[0][0],d.contact[0][1])):"";
   const svc=generic?"<p>"+esc(tr("Nothing published for this grade band"))+"</p>"
     :items.map(([t,b])=>'<div class="ci"><span class="tag '+(t==="yes"?"yes":"ask")+'">'+esc(t==="yes"?tr("Offered"):tr("Ask about"))+"</span><b>"+esc(b)+"</b></div>").join("");
   const scr=(d.scr?'<p class="scr-grades"><b>'+esc(tr("Grades screened:"))+"</b> "+esc(byLang(d.scr.t,d.scr.es))+"</p>":"")
@@ -1655,13 +1662,14 @@ function schoolInfo(d,st){
 function renderExtra(d,st,now,ex){
   if(d.appeal){
     const a=d.appeal, dl=appealDeadline(a,st.appealDate,now);
-    const to=a.to?(a.to+(a.how?", "+a.how:"")):(a.how||"");
+    const uc=t=>t?t.charAt(0).toUpperCase()+t.slice(1):t;
+    const to=uc(a.to?(a.to+(a.how?", "+a.how:"")):(a.how||""));
     /* A family whose child is already identified is not appealing an identification decision, so the section is there but folded. */
     const folded=st.s==="yes"||(!st.appealDate&&!st.c.includes("missed")&&!st.c.includes("mismatch"));   /* folded unless a date is entered or a sign of a missed or mismatched service is ticked */
     const sec=el(folded?"details":"section","block");
     if(folded){sec.append(el("summary","",esc(tr("Appealing a decision"))));}
     else sec.append(el("h3","",esc(tr("Appealing a decision"))));
-    sec.append(el("div","",kv([["Send it to",to],["Deadline",dl.text],["Include",a.include||""],["What happens next",a.next||""]])));
+    sec.append(el("div","",kv([["Send it to",to],["Deadline",dl.text],["Include",uc(a.include||"")],["What happens next",uc(a.next||"")]])));
     ex.append(sec);
   }
   if(st.c.includes("fulltime")&&d.ftd){
@@ -1748,7 +1756,7 @@ function render(){
   if(hit0&&hit0.note) setHTML(sumC,"<b>"+esc(hit0.name)+"</b><p>"+linkifyContact("",hit0.note.replace(/\s*From the school staff directory, checked [^.]*\.\s*$/,""))+"</p>");   /* the band is a short pointer: the source note and directory link stay in the school card below */
   else if(d.contact[0]){let v0=d.contact[0][1];if(Array.isArray(v0))v0=v0[0];
     let body=contactHTML(d.contact[0][0],v0);
-    if(typeof v0==="string"&&!/[@\d]/.test(v0)){const m=/^([^,]{3,48}),\s+(.+)$/.exec(v0.trim());if(m&&m[1].trim().split(/\s+/).length<=5) body='<span class="person"><span class="line"><b>'+esc(m[1].trim())+'</b></span><span class="role">'+esc(m[2])+"</span></span>";}   /* name first, job title under it */
+    if(typeof v0==="string"){const nr=nameRoleHTML(v0);if(nr) body=nr;}   /* name first, job title under it */
     const ph=d.contact.find(c=>/^phone$/i.test(c[0])&&typeof c[1]==="string");
     if(ph&&typeof v0==="string") body+='<span class="person"><span class="line">'+linkifyContact("Phone",ph[1])+"</span></span>";
     setHTML(sumC,'<span class="role">'+esc(d.contact[0][0])+"</span>"+body);}
