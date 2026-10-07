@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-2Jj+2+Af7nx/3RUUT1Pa3gMP0fU+jePhmN87u62gDoA=' https://static.cloudflareinsights.com; style-src 'sha256-Vcc9IseM8Q1Dnqg3IF4IAFK5vRSgZ6OpYy2w5PTEJJQ='; img-src data: blob:; connect-src 'self'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Gbpwby2nM8e4bBhDoG/vzBsWpx35M1n8aUDW+Gz/tlk=' https://static.cloudflareinsights.com; style-src 'sha256-Vcc9IseM8Q1Dnqg3IF4IAFK5vRSgZ6OpYy2w5PTEJJQ='; img-src data: blob:; connect-src 'self'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -984,8 +984,8 @@ function syncGradeLimit(){
   if(!lim) refreshSchools();
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
-const TOOL_VERSION="2026.10.05.3";
-const BUILD_ID="2fc28ce05d";
+const TOOL_VERSION="2026.10.06.1";
+const BUILD_ID="2e128cac09";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
@@ -1813,7 +1813,7 @@ function summary(){
   const lines=[
     "GT conversation notes",
     d.name+", "+gradeLabel(st.gr,"en")+(st.school?", "+st.school:""),
-    "Prepared "+new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"})+" with the GT Pathways Finder, version "+TOOL_VERSION+". District details checked "+d.checked+". Concept prototype, not an official MSDE or school system document.",
+    "Prepared "+new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"})+" with the GT Pathways Finder. District details checked "+d.checked+". Concept prototype, not an official MSDE or school system document.",
     "",
     "Maryland requires (COMAR 13A.04.07): identification by grade 3, multiple measures, results in writing, a written appeals process, universal screening that identifies at least 10 percent of students in each school system, a continuum of services, and annual public reporting of GT programs in the Local ESSA Consolidated Strategic Plan.",
     "",
@@ -2172,7 +2172,7 @@ function setLanguage(l,keepAud){
   if(isEs()){APP.aud="parent";a.value="parent";a.disabled=true;a.closest("label").hidden=true;}
   else{a.disabled=false;a.closest("label").hidden=false;if(!keepAud)APP.aud=a.value;}
   buildGradeOptions();applyStatic();renderResources();renderAllIfOpen();
-  $("build").textContent=byLang("Tool version ","Versión ")+TOOL_VERSION+(BUILD_ID?" ("+BUILD_ID+")":"")+". "+byLang("District details checked ","Detalles de distritos verificados en ")+DATA_CHECKED+". "+byLang("This page does not save or send what you select or type; the web address may record only your school system and language."+(ANALYTICS?" The site uses Cloudflare Web Analytics to count visits and measure page speed. Cloudflare says it sets no cookies and does not track individual visitors.":" It loads no outside fonts or scripts."),"Esta página no guarda ni envía lo que usted seleccione o escriba; la dirección web puede anotar solo su distrito escolar y el idioma."+(ANALYTICS?" El sitio usa Cloudflare Web Analytics para contar visitas y medir la velocidad de la página. Cloudflare indica que no usa cookies y que no rastrea a visitantes individuales.":" No carga fuentes ni scripts externos."))+" "+(OFFICIAL_URL?byLang("Official copy: ","Copia oficial: ")+OFFICIAL_URL:byLang("Check with the GTAC subcommittee that you have the current version.","Confirme con el subcomité GTAC que tiene la versión actual."));
+  $("build").textContent=byLang("District details checked ","Detalles de distritos verificados en ")+DATA_CHECKED+". "+byLang("This page does not save or send what you select or type; the web address may record only your school system and language."+(ANALYTICS?" The site uses Cloudflare Web Analytics to count visits and measure page speed. Cloudflare says it sets no cookies and does not track individual visitors.":" It loads no outside fonts or scripts."),"Esta página no guarda ni envía lo que usted seleccione o escriba; la dirección web puede anotar solo su distrito escolar y el idioma."+(ANALYTICS?" El sitio usa Cloudflare Web Analytics para contar visitas y medir la velocidad de la página. Cloudflare indica que no usa cookies y que no rastrea a visitantes individuales.":" No carga fuentes ni scripts externos."))+" "+(OFFICIAL_URL?byLang("Official copy: ","Copia oficial: ")+OFFICIAL_URL:byLang("Check with the GTAC subcommittee that you have the current version.","Confirme con el subcomité GTAC que tiene la versión actual."));
   const dw=$("data-warn");if(dw){dw.hidden=!DATA_WARNINGS.length;dw.textContent=DATA_WARNINGS.length?tr("Some school system details could not be loaded correctly and were left out. Please check with your school system."):"";}
   refreshSchools();
   safeRender();
