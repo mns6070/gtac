@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Gbpwby2nM8e4bBhDoG/vzBsWpx35M1n8aUDW+Gz/tlk=' https://static.cloudflareinsights.com; style-src 'sha256-Vcc9IseM8Q1Dnqg3IF4IAFK5vRSgZ6OpYy2w5PTEJJQ='; img-src data: blob:; connect-src 'self'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Z7DEFl351282TQ5CiQQgDGWL0NbpTBbEFvNPnQKt100=' https://static.cloudflareinsights.com; style-src 'sha256-SVA3l63jrkdPHR30gXsQKAWLcsVS8E0yuiVZJ9001Ug='; img-src data: blob:; connect-src 'self'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -119,6 +119,8 @@ ol.qs li::marker{font-family:var(--mono);color:var(--accent);font-size:var(--t-s
 .contact .v p{font-weight:400;margin:4px 0 0}
 .contact .v .person>*{margin:0}
 .contact .v .cx{margin-top:0}
+/* a name, its title, then its phone and email sit as one block: no extra gap between the parts, the same as a structured contact */
+.contact .v .person:has(+ .cx), .contact .v .cx:has(+ .cx) .person{margin-bottom:0}
 .contact a[href^="tel:"]{white-space:nowrap}
 .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 @media (max-width:640px){.two{grid-template-columns:minmax(0,1fr)}}
@@ -984,8 +986,8 @@ function syncGradeLimit(){
   if(!lim) refreshSchools();
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
-const TOOL_VERSION="2026.10.06.1";
-const BUILD_ID="2e128cac09";
+const TOOL_VERSION="2026.10.09.1";
+const BUILD_ID="f4f56cba44";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
@@ -1337,12 +1339,15 @@ function contactHTML(label,v){
     if(v.email) parts.push('<span class="line">'+linkifyContact("Email",v.email)+'</span>');
     return parts.length?'<span class="person">'+parts.join("")+'</span>':"";
   }
+  if(typeof v==="string"){const nr=nameRoleHTML(v);if(nr) return nr;}   /* "Name, Job title": name in bold, title under it, like every structured contact */
   return linkifyContact(label,v);
 }
+const ONE_NAME="(?:[A-Z][A-Za-z.'’-]*)(?:\\s+(?:(?:de|la|van|von|der|del|di|le|st\\.?)|[A-Z][A-Za-z.'’-]*)){1,4}";
+const PERSON_NAME=new RegExp("^"+ONE_NAME+"(?:\\s+and\\s+"+ONE_NAME+")?$");   /* one person, or two joined by "and" */
 function nameRoleHTML(v){   /* a plain "Name, Job title" string, shown the same way as a structured contact */
-  if(typeof v!=="string"||/[@\d]/.test(v)) return "";
-  const m=/^([^,]{3,48}),\s+(.+)$/.exec(v.trim());
-  if(!m||m[1].trim().split(/\s+/).length>5) return "";
+  if(typeof v!=="string"||v.includes("@")||/\d[\d\s().-]{5,}\d/.test(v)) return "";   /* not an address or a phone number (a digit inside a job title such as "K-8" is fine) */
+  const m=/^([^,]{3,60}),\s+(.+)$/.exec(v.trim());
+  if(!m||m[1].trim().split(/\s+/).length>10||!PERSON_NAME.test(m[1].trim())) return "";   /* only something that reads as a person's name, so ordinary sentences with a comma stay plain */
   return '<span class="person"><span class="line"><b>'+esc(m[1].trim())+'</b></span><span class="role">'+esc(m[2])+"</span></span>";
 }
 function coordName(d){
