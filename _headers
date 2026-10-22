@@ -1,5 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'none'; script-src 'sha256-uxLCoji+rc5oNwEandxoohKWW9PySxTPce38xM4BBUs=' 'sha256-ZB7qMY6Ot+wv+GJuIGkmguTuggFpse+pl0UqtsBkYfI=' https://static.cloudflareinsights.com; style-src 'sha256-+Yty+OvZt17pksj/TULhRA1u/mWj+IWfTYvVrm9VuKM='; img-src data: blob:; connect-src 'self'; form-action 'none'; base-uri 'none'; upgrade-insecure-requests; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'none'; script-src 'sha256-uxLCoji+rc5oNwEandxoohKWW9PySxTPce38xM4BBUs=' 'sha256-HfQVHkciANkFy8lQPHfhmOTI91aL3qfCGmnkLk70YzM=' https://static.cloudflareinsights.com; style-src 'sha256-+Yty+OvZt17pksj/TULhRA1u/mWj+IWfTYvVrm9VuKM='; img-src data: blob:; connect-src 'self'; form-action 'none'; base-uri 'none'; upgrade-insecure-requests; frame-ancestors 'none'
   X-Frame-Options: DENY
   Referrer-Policy: no-referrer
   X-Content-Type-Options: nosniff
