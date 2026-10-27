@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-uxLCoji+rc5oNwEandxoohKWW9PySxTPce38xM4BBUs=' 'sha256-Ol0wqqrKsYXVwzVtjs8pGFHeQGTGUyiYo4Vs/s6Y6pc=' https://static.cloudflareinsights.com; style-src 'sha256-+Yty+OvZt17pksj/TULhRA1u/mWj+IWfTYvVrm9VuKM='; img-src data: blob:; connect-src 'self'; form-action 'none'; base-uri 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-uxLCoji+rc5oNwEandxoohKWW9PySxTPce38xM4BBUs=' 'sha256-+HORDPJEavx2xAevbpwHZuPbLZBdlsqcS48evfkz4wA=' https://static.cloudflareinsights.com; style-src 'sha256-+Yty+OvZt17pksj/TULhRA1u/mWj+IWfTYvVrm9VuKM='; img-src data: blob:; connect-src 'self'; form-action 'none'; base-uri 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -656,8 +656,8 @@ function syncGradeLimit(){
   if(!lim) refreshSchools();
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
-const TOOL_VERSION="2026.10.24.1";
-const BUILD_ID="255d36e7e0";
+const TOOL_VERSION="2026.10.26.1";
+const BUILD_ID="38a186e435";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
@@ -677,7 +677,7 @@ const RESOURCES=[
 const APP={lang:"en",aud:"parent",touched:false,letterDirty:false,letterFor:"",errors:[],busy:{},sortKey:"name",sortDir:1,tableStale:true,toastTimer:null};
 const LANG_LIST=[["en","English","en","en-US"],["es","Español","es","es-US"],["fr","Français","fr","fr-FR"],["vi","Tiếng Việt","vi","vi-VN"],["zh","中文（简体）","zh-Hans","zh-CN"],["ko","한국어","ko","ko-KR"],["am","አማርኛ","am","am-ET"],["pt","Português","pt","pt-BR"]];
 const LANG_DATA={};   /* a language pack is {dict:{English text:translation},rich:{key:html}}. It is a separate file (lang/xx.HASH.json), fetched the first time that language is chosen and checked against the sha256 this page was built with. Spanish UI text is ES and RICH.es; its pack adds the district details. */
-const LANG_PACKS={"am":["lang/am.d1de8a2b.json","d1de8a2bc59988991723fe7a799f75a859a28f3c5ae7cb552dac4af57f26dd44"],"es":["lang/es.d94d8cab.json","d94d8cab6e67b75cc6dc90b70f1770561b05278bdad30ad98d22d6daadc2a32c"],"fr":["lang/fr.90d02779.json","90d0277945d45e0e9e264824aadf8ec4645a4bb04cb3b9d7e8ef732e457c7d76"],"ko":["lang/ko.5ae1330f.json","5ae1330f7c52ddecd93a95ce2cd3ffd418c9188ede29a8b1d4f91c51138e7f4a"],"pt":["lang/pt.472d464b.json","472d464b2a0f02fb98165b52b6193132fea54bc90039f5fc84415db088e95e13"],"vi":["lang/vi.6c6cf6b1.json","6c6cf6b19d6b0055989c95c051d593f5a1c7790a8149e202846dbb7230aceb58"],"zh":["lang/zh.a141c584.json","a141c584d0d278f8be8b579e868a14018644a241b05d705534656f9aa564b396"]};   /* {code:[file,sha256]}, stamped in by the build */
+const LANG_PACKS={"am":["lang/am.6b00a511.json","6b00a511f09381b350477be94b77677d660b0389bf22172299642eec434842a4"],"es":["lang/es.d4f9f07d.json","d4f9f07dd54da93ecbfbfa12336ea60e42d5a642a4056a740dde38250e2e56ac"],"fr":["lang/fr.bacf10ad.json","bacf10adcc21e19329a097262401b83bd926df5234af06f9139256a2ebad6e69"],"ko":["lang/ko.51c99a0e.json","51c99a0e28d54b1e195e57d69207584c80f87b5d147ced8d8a5fb238f4e19e51"],"pt":["lang/pt.f9e43e4a.json","f9e43e4aaae8d04b01bf81f9210ae4b5c0b3b00ced41c308e6f1b0dc6542b759"],"vi":["lang/vi.cb7fa546.json","cb7fa5461ee6f2e207bd6582724865d9448b16fff352d5620851692a065736c5"],"zh":["lang/zh.7c8032fd.json","7c8032fd804fe818d74b69f72c21f40fcb441edd1c6e3a50f37d86184f7a18ee"]};   /* {code:[file,sha256]}, stamped in by the build */
 const LANG_PENDING=new Set();   /* packs being fetched; the tests wait on these */
 function langPack(l){return own(LANG_DATA,l)?LANG_DATA[l]:null;}
 async function ensureLang(l){
@@ -703,12 +703,12 @@ async function ensureLang(l){
   try{await job;}finally{LANG_PENDING.delete(job);}
   return !!LANG_DATA[l];
 }
-function richOf(l,k){if(l==="es")return RICH.es&&RICH.es[k];const p=langPack(l);return p&&p.rich?p.rich[k]:undefined;}
+function richOf(l,k){if(l==="es"){const p=langPack("es");return (RICH.es&&RICH.es[k])||(p&&p.rich?p.rich[k]:undefined);}const p=langPack(l);return p&&p.rich?p.rich[k]:undefined;}
 const langInfo=l=>LANG_LIST.find(x=>x[0]===l)||LANG_LIST[0];
 const isLocal=()=>APP.lang!=="en";
 function dictOf(l){if(l==="es"){const p=langPack("es");return p&&p.all?p.all:ES;}const p=langPack(l);return p&&p.dict?p.dict:null;}
 function trIn(l,s){if(l==="en")return s;const d=dictOf(l);return d&&own(d,s)?d[s]:s;}
-const studentMode=()=>APP.aud==="student"&&APP.lang==="en";
+const studentMode=()=>APP.aud==="student";
 
 /* ---------- Spanish. Keys are the exact English strings. The district details are in data/lang/es.json. ---------- */
 const ES={"That did not work. Reload the page and try again. If it keeps happening, use Copy diagnostics at the bottom of the page.":"Eso no funcionó. Vuelva a cargar la página e inténtelo de nuevo. Si sigue ocurriendo, use Copiar diagnóstico al final de la página.","Choose your school system first.":"Primero elija su distrito escolar.","Copy diagnostics":"Copiar diagnóstico","Diagnostics copied. Paste them into an email to the GTAC Student/Family Subcommittee.":"Diagnóstico copiado. Péguelo en un correo al Subcomité de Estudiantes y Familias del GTAC.","The download did not start. The text is below so you can copy it into a document yourself.":"La descarga no comenzó. El texto está abajo para que lo copie en un documento usted mismo.","More than one school matches \"{s}\". Pick one from the list in the school box.":"Más de una escuela coincide con \"{s}\". Elija una de la lista en el cuadro de la escuela.","{from} is not served by this school, so the grade was changed to {to}. Choose another grade if that is not right.":"{from} no corresponde a esta escuela, así que el grado cambió a {to}. Elija otro grado si no es correcto.","You edited this letter for a different school system, grade, or set of choices, so it may no longer match your results.":"Editó esta carta para otro distrito escolar, grado u otras opciones, así que es posible que ya no coincida con sus resultados.","Replace it with a new letter":"Reemplazar con una carta nueva","Screening grades":"Grados de evaluación","Transfer steps":"Pasos para traslados","Dates listed":"Fechas indicadas","Yes, {n} {u}":"Sí, {n} {u}","Yes, set dates each year":"Sí, con fechas fijas cada año","Yes, no deadline":"Sí, sin fecha límite","(acceleration only)":"(solo aceleración)","Publishes an appeal deadline":"Publica un plazo de apelación","Has steps for students transferring in":"Tiene pasos para estudiantes que se trasladan","Lists dates to watch":"Indica fechas importantes","Lists school level GT contacts":"Indica contactos de GT por escuela","Screens in grade ":"Evalúa en el grado ","Any grade":"Cualquier grado","Kindergarten":"Kínder","Screens in grade":"Evalúa en el grado","days":"días","calendar days":"días calendario","business days":"días hábiles",
@@ -890,7 +890,7 @@ const ES={"That did not work. Reload the page and try again. If it keeps happeni
 "Letter text":"Texto de la carta",
 "This translation was made by a machine and has not been reviewed by a person. If anything differs from the English page, rely on the English page.":"Esta traducción la hizo una máquina y ninguna persona la ha revisado. Si algo difiere de la página en inglés, confíe en la página en inglés.","Coordinator contacts: ":"Contactos de coordinación: ","{name}, archived {date}":"{name}, archivado el {date}"
 };
-/* Student wording (English only) for static text */
+/* Student wording for static text (translated in each language file) */
 const STU={
 "Choose your school system, your child's grade, and whether your child has been identified as GT. Then you will see:":"Choose your school system, your grade, and whether you have been identified as GT. Then you will see:",
 "Find the right gifted and talented path for your child":"Find the right gifted and talented path for you",
@@ -995,7 +995,12 @@ function setHTML(node,html){
 }
 function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)setHTML(e,html);return e}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-function tr(s){if(isLocal())return trIn(APP.lang,s);if(APP.aud==="student"&&own(STU,s))return STU[s];return s;}
+function tr(s){
+  if(isLocal()){
+    /* a student sees the student wording of a sentence when the language has it, and the family wording when it does not */
+    if(APP.aud==="student"&&own(STU,s)){const d=dictOf(APP.lang),t=STU[s];if(d&&own(d,t))return d[t];}
+    return trIn(APP.lang,s);
+  }if(APP.aud==="student"&&own(STU,s))return STU[s];return s;}
 function trf(s,vars){let o=tr(s);if(typeof o!=="string")o=String(o==null?"":o);Object.keys(vars||{}).forEach(k=>{o=o.split("{"+k+"}").join(String(vars[k]==null?"":vars[k]));});return o;}
 
 /* ---------- contact linking: one pass over the raw text ---------- */
@@ -1912,8 +1917,8 @@ function applyStatic(){
   STATIC.forEach(o=>{o.n.nodeValue=o.pre+tr(o.core)+o.post;});
   document.querySelectorAll("[data-al]").forEach(e=>e.setAttribute("aria-label",tr(e.dataset.al)));
   document.querySelectorAll("[data-rich]").forEach(e=>{
-    const k=e.dataset.rich,useStu=studentMode()&&RICH.en[k+"_student"];
-    setHTML(e,useStu?RICH.en[k+"_student"]:(richOf(APP.lang,k)||RICH.en[k]));
+    const k=e.dataset.rich,sk=k+"_student",stu=studentMode();
+    setHTML(e,(stu&&(isLocal()?richOf(APP.lang,sk):RICH.en[sk]))||richOf(APP.lang,k)||RICH.en[k]);
   });
   document.documentElement.lang=langInfo(APP.lang)[2];
   {const mt=$("mt-note");if(mt){mt.hidden=!isLocal();mt.textContent=isLocal()?tr("This translation was made by a machine and has not been reviewed by a person. If anything differs from the English page, rely on the English page."):"";}}
@@ -1931,8 +1936,7 @@ async function switchLanguage(l){
 function setLanguage(l,keepAud){
   APP.lang=l;APP.applied=l;
   const a=$("audience");
-  if(isLocal()){APP.aud="parent";a.value="parent";a.disabled=true;a.closest("label").hidden=true;}
-  else{a.disabled=false;a.closest("label").hidden=false;if(!keepAud)APP.aud=a.value;}
+  a.disabled=false;a.closest("label").hidden=false;if(!keepAud)APP.aud=a.value;
   applyDistrictLanguage(APP.lang);
   buildGradeOptions();applyStatic();renderResources();renderAllIfOpen();
   $("build").textContent=tr("District details checked")+" "+DATA_CHECKED+". "+tr("This page does not save or send what you select or type; the web address may record only your school system and language.")+" "+(ANALYTICS?tr("The site uses Cloudflare Web Analytics to count visits and measure page speed. Cloudflare says it sets no cookies and does not track individual visitors."):tr("It loads no outside fonts or scripts."))+" "+(OFFICIAL_URL?tr("Official copy:")+" "+OFFICIAL_URL:tr("Check with the GTAC subcommittee that you have the current version."));
