@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-uxLCoji+rc5oNwEandxoohKWW9PySxTPce38xM4BBUs=' 'sha256-+HORDPJEavx2xAevbpwHZuPbLZBdlsqcS48evfkz4wA=' https://static.cloudflareinsights.com; style-src 'sha256-+Yty+OvZt17pksj/TULhRA1u/mWj+IWfTYvVrm9VuKM='; img-src data: blob:; connect-src 'self'; form-action 'none'; base-uri 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-uxLCoji+rc5oNwEandxoohKWW9PySxTPce38xM4BBUs=' 'sha256-CZfVoQpE0cRy6jW4LSZWc0VupNdthJb1T33WKfU1AoQ=' https://static.cloudflareinsights.com; style-src 'sha256-+Yty+OvZt17pksj/TULhRA1u/mWj+IWfTYvVrm9VuKM='; img-src data: blob:; connect-src 'self'; form-action 'none'; base-uri 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GT Pathways Finder</title>
@@ -395,9 +395,9 @@ form.steps.locked>details.fold>.foldbody{opacity:.55}
         <legend><span class="n">4</span>Has your child been identified as GT?</legend>
         <div class="chips" role="radiogroup" aria-label="Identification status">
           <label class="chip"><input type="radio" name="status" id="s-yes" value="yes"><span>Yes, by this school system</span></label>
+          <label class="chip"><input type="radio" name="status" id="s-other" value="other"><span>Yes, by a different school system or state</span></label>
           <label class="chip"><input type="radio" name="status" id="s-no" value="no"><span>No, not identified</span></label>
           <label class="chip"><input type="radio" name="status" id="s-unsure" value="unsure"><span>Not sure</span></label>
-          <label class="chip"><input type="radio" name="status" id="s-other" value="other"><span>Yes, by a different school system or state</span></label>
         </div>
       </fieldset>
 
@@ -657,7 +657,7 @@ function syncGradeLimit(){
 }
 const NEXT_BAND={k2:"35","35":"68","68":"912"};
 const TOOL_VERSION="2026.10.26.1";
-const BUILD_ID="38a186e435";
+const BUILD_ID="37a9862200";
 const OFFICIAL_URL="https://gtac-info.pages.dev/";
 const DATA_CHECKED="September 2026";
 /* Set this to the address that should receive correction reports. When empty, the button copies a ready made message instead. */
